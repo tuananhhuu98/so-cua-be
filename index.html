@@ -7,9 +7,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Sổ của bé">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>Sổ của bé</title>
+<title>Sổ của bé 🍼</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 
 <!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -21,131 +21,174 @@
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
-  --bg:#f2f6f5; --paper:#ffffff; --ink:#1e3347; --muted:#667a8a; --line:#dbe5e8;
-  --blue:#2f7a9e; --blue-soft:#dcedf4; --butter:#f7d774; --butter-soft:#fdf3cc;
-  --blush:#f2b8b0; --blush-soft:#fbe6e3; --mint:#bfe3d0; --mint-soft:#e1f3ea;
-  --danger:#c4473a; --grid:#e6eef0; --btn-ink:#ffffff;
-  --shadow:0 1px 0 rgba(30,51,71,.06),0 6px 18px rgba(30,51,71,.06);
+  --bg:#fbf6f0; 
+  --paper:#ffffff; 
+  --ink:#2d3a4b; 
+  --muted:#8192a3; 
+  --line:#f0e6dc;
+  --pink:#ff7e9e; 
+  --pink-soft:#fff0f3; 
+  --pink-border:#ffd3dc;
+  --blue:#64b5f6; 
+  --blue-soft:#eaf4fe; 
+  --butter:#ffca58; 
+  --butter-soft:#fff8e7; 
+  --mint:#5ec49e; 
+  --mint-soft:#eaf8f2; 
+  --purple:#b388ff;
+  --purple-soft:#f5efff;
+  --coral:#ff9270;
+  --coral-soft:#fff2ee;
+  --danger:#ff5252; 
+  --radius-lg:26px;
+  --radius-md:18px;
+  --shadow:0 8px 24px rgba(223, 195, 178, 0.28), 0 2px 6px rgba(0,0,0,0.02);
+  --shadow-sm:0 4px 14px rgba(223, 195, 178, 0.22);
 }
+
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#101a24; --paper:#182533; --ink:#e8f0f5; --muted:#92a6b5; --line:#263748;
-    --blue:#6cb6da; --blue-soft:#1d3a4c; --butter:#f2cf66; --butter-soft:#3a3319;
-    --blush:#e9a69d; --blush-soft:#3d2724; --mint:#7fc3a5; --mint-soft:#1c3a2e;
-    --danger:#ef7d70; --grid:#223244; --btn-ink:#0b1822; --shadow:0 1px 0 rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25);
+    --bg:#141a24; --paper:#1c2533; --ink:#edf3f8; --muted:#8e9faa; --line:#2c3a4d;
+    --pink:#ff8fa9; --pink-soft:#331d25; --pink-border:#4d2531;
+    --blue:#7ebef8; --blue-soft:#182b3d; --butter:#fcd06b; --butter-soft:#332912;
+    --mint:#74d4b1; --mint-soft:#152e25; --purple:#c19bff; --purple-soft:#2a1f3d;
+    --coral:#ffa085; --coral-soft:#33211b; --danger:#ff6b6b;
+    --shadow:0 8px 25px rgba(0,0,0,0.35); --shadow-sm:0 4px 12px rgba(0,0,0,0.25);
   }
 }
-:root[data-theme="dark"]{
-  --bg:#101a24; --paper:#182533; --ink:#e8f0f5; --muted:#92a6b5; --line:#263748;
-  --blue:#6cb6da; --blue-soft:#1d3a4c; --butter:#f2cf66; --butter-soft:#3a3319;
-  --blush:#e9a69d; --blush-soft:#3d2724; --mint:#7fc3a5; --mint-soft:#1c3a2e;
-  --danger:#ef7d70; --grid:#223244; --btn-ink:#0b1822; --shadow:0 1px 0 rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25);
-}
+
 html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
 *,*::before,*::after{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:"Be Vietnam Pro",-apple-system,sans-serif;font-size:15px;line-height:1.5;-webkit-tap-highlight-color:transparent}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Nunito","Be Vietnam Pro",-apple-system,sans-serif;
+  font-size:15px;line-height:1.5;-webkit-tap-highlight-color:transparent;
+  background-image:radial-gradient(var(--pink-border) 0.75px, transparent 0.75px);
+  background-size:24px 24px;
+}
+
 button,input,select,textarea{font:inherit;color:inherit}
-button{cursor:pointer;border:0;background:none;padding:0}
-:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:8px}
-#app{max-width:520px;margin:0 auto;min-height:100vh;padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+button{cursor:pointer;border:0;background:none;padding:0;transition:transform 0.15s ease}
+button:active{transform:scale(0.96)}
+:focus-visible{outline:3px solid var(--pink);outline-offset:2px;border-radius:12px}
 
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:14px 18px 10px;display:flex;align-items:center;gap:12px}
-.top h1{margin:0;font-size:19px;font-weight:800;letter-spacing:-.01em;line-height:1.2}
-.top p{margin:0;color:var(--muted);font-size:13px}
+#app{max-width:500px;margin:0 auto;min-height:100vh;padding-bottom:calc(88px + env(safe-area-inset-bottom,0px))}
+
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(251,246,240,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:14px 20px 10px;display:flex;align-items:center;gap:12px}
+.top h1{margin:0;font-size:21px;font-weight:900;line-height:1.2}
+.top p{margin:0;color:var(--pink);font-size:13.5px;font-weight:700}
 .top .who{flex:1;min-width:0}
-.icon-btn{width:42px;height:42px;border-radius:14px;background:var(--paper);box-shadow:var(--shadow);display:grid;place-items:center;font-size:19px}
+.icon-btn{width:44px;height:44px;border-radius:16px;background:var(--paper);box-shadow:var(--shadow-sm);display:grid;place-items:center;font-size:20px;border:1px solid var(--line)}
 
-main{padding:4px 16px 12px}
-section{margin-bottom:16px}
-.sec-title{font-size:15px;font-weight:700;margin:0 2px 8px}
+main{padding:4px 16px 14px}
+section{margin-bottom:18px}
+.sec-title{font-size:16px;font-weight:800;margin:0 4px 10px;color:var(--ink);display:flex;align-items:center;gap:6px}
 
-.card{background:var(--paper);border-radius:20px;padding:16px;box-shadow:var(--shadow)}
-.strip{display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:var(--paper);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
-.strip>div{padding:16px 12px 14px;border-right:1px dashed var(--line)}
+.card{background:var(--paper);border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,0.7)}
+
+.strip{display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:var(--paper);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--line)}
+.strip>div{padding:16px 10px 14px;border-right:1.5px dashed var(--line);text-align:center}
 .strip>div:last-child{border-right:0}
-.strip .k{font-size:12.5px;color:var(--muted);font-weight:500}
-.strip .v{font-size:27px;font-weight:800;letter-spacing:-.02em;line-height:1.1;margin-top:4px;font-variant-numeric:tabular-nums}
-.strip .v small{font-size:13px;font-weight:600;color:var(--muted);margin-left:2px}
-.strip .d{font-size:12px;margin-top:6px;color:var(--muted)}
-.strip .d.up{color:var(--blue)}
-.strip .w .v{color:var(--blue)}
+.strip .k{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase}
+.strip .v{font-size:26px;font-weight:900;line-height:1.15;margin-top:6px;font-variant-numeric:tabular-nums}
+.strip .v small{font-size:13px;font-weight:700;color:var(--muted);margin-left:2px}
+.strip .d{font-size:11.5px;margin-top:6px;color:var(--muted);font-weight:600}
+.strip .d.up{color:var(--pink);font-weight:700}
+.strip .w .v{color:var(--pink)}
 .strip>div.empty .v{color:var(--line)}
 
-.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.mini{border-radius:18px;padding:14px}
-.mini.milk{background:var(--butter-soft)}
-.mini.sleep{background:var(--blush-soft)}
-.mini .k{font-size:12.5px;color:var(--muted);font-weight:500}
-.mini .v{font-size:24px;font-weight:800;letter-spacing:-.02em;margin-top:2px}
-.mini .v small{font-size:13px;font-weight:600;color:var(--muted)}
+.grid-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mini{border-radius:22px;padding:14px 16px;box-shadow:var(--shadow-sm);border:1.5px solid transparent}
+.mini.milk{background:var(--butter-soft);border-color:#ffe299}
+.mini.sleep{background:var(--purple-soft);border-color:#e2cfff}
+.mini.pump{background:var(--coral-soft);border-color:#ffd7cb}
+.mini.diaper{background:var(--mint-soft);border-color:#c0edd9}
+.mini .k{font-size:12.5px;color:var(--ink);font-weight:700;opacity:0.85}
+.mini .v{font-size:22px;font-weight:900;margin-top:2px}
+.mini.milk .v{color:#d48b00}
+.mini.sleep .v{color:#794ec7}
+.mini.pump .v{color:#e65c00}
+.mini.diaper .v{color:#2a966f}
+.mini .v small{font-size:13px;font-weight:700;opacity:0.85}
 
-.quick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 18px;border-radius:14px;font-weight:700;background:var(--blue);color:var(--btn-ink)}
-.btn.ghost{background:var(--blue-soft);color:var(--blue)}
+.quick{display:grid;grid-template-columns:repeat(3, 1fr);gap:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:46px;padding:0 14px;border-radius:var(--radius-md);font-weight:800;font-size:14px;background:var(--pink);color:#fff;box-shadow:0 4px 14px rgba(255,126,158,0.35)}
+.btn.ghost{background:var(--pink-soft);color:var(--pink);box-shadow:none;border:1px solid var(--pink-border)}
 .btn.wide{width:100%}
-.btn.danger{background:var(--blush-soft);color:var(--danger)}
-.btn.small{min-height:38px;padding:0 14px;font-size:14px;border-radius:12px}
-.btn.plain{background:transparent;color:var(--blue);min-height:38px}
+.btn.danger{background:var(--pink-soft);color:var(--danger);box-shadow:none;border:1px solid var(--pink-border)}
+.btn.small{min-height:38px;padding:0 14px;font-size:13.5px;border-radius:14px}
+.btn.plain{background:transparent;color:var(--pink);min-height:38px;box-shadow:none}
 
-.seg{display:flex;background:var(--blue-soft);border-radius:14px;padding:4px;gap:4px;margin-bottom:12px}
-.seg button{flex:1;min-height:38px;border-radius:11px;font-weight:600;font-size:14px;color:var(--muted)}
-.seg button[aria-pressed="true"]{background:var(--paper);color:var(--ink);box-shadow:0 1px 3px rgba(30,51,71,.12)}
+.btn-google{background:#ffffff;color:#3c4043;border:1.5px solid var(--line);box-shadow:var(--shadow-sm);font-weight:700;font-size:14.5px}
+
+.seg{display:flex;background:var(--line);border-radius:18px;padding:5px;gap:4px;margin-bottom:14px;overflow-x:auto}
+.seg button{flex:1;min-height:38px;border-radius:14px;font-weight:800;font-size:13.5px;color:var(--muted);white-space:nowrap;padding:0 8px}
+.seg button[aria-pressed="true"]{background:var(--paper);color:var(--pink);box-shadow:var(--shadow-sm)}
 
 .chart{width:100%;height:auto;display:block}
-.chart text{font-family:inherit;fill:var(--muted);font-size:10.5px}
-.chart .gl{stroke:var(--grid);stroke-width:1}
-.chart .ln{fill:none;stroke:var(--blue);stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
-.chart .dot{fill:var(--butter);stroke:var(--blue);stroke-width:2}
-.chart .val{fill:var(--ink);font-weight:700;font-size:11px}
+.chart text{font-family:inherit;fill:var(--muted);font-size:10.5px;font-weight:600}
+.chart .gl{stroke:var(--line);stroke-width:1.2;stroke-dasharray:3 3}
+.chart .ln{fill:none;stroke:var(--pink);stroke-width:3.5;stroke-linejoin:round;stroke-linecap:round}
+.chart .dot{fill:var(--butter);stroke:var(--pink);stroke-width:2.5}
+.chart .val{fill:var(--pink);font-weight:800;font-size:11.5px}
 
-.list{display:flex;flex-direction:column;gap:8px}
-.row{display:flex;align-items:center;gap:12px;background:var(--paper);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow)}
+.list{display:flex;flex-direction:column;gap:10px}
+.row{display:flex;align-items:center;gap:12px;background:var(--paper);border-radius:20px;padding:14px 16px;box-shadow:var(--shadow-sm);border:1px solid var(--line)}
 .row .main{flex:1;min-width:0}
-.row .t{font-weight:600;overflow-wrap:anywhere}
-.row .s{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
-.row .x{width:36px;height:36px;border-radius:10px;color:var(--muted);font-size:18px;display:grid;place-items:center}
-.row .x:active{background:var(--blush-soft);color:var(--danger)}
-.day{font-size:13px;font-weight:700;color:var(--muted);margin:14px 4px 6px;display:flex;justify-content:space-between}
-.chip{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:99px;background:var(--blue-soft);color:var(--blue);margin-right:6px}
-.chip.t-tiem{background:var(--mint-soft);color:#2d7a58}
-.chip.t-thai{background:var(--blush-soft);color:#b05448}
-.chip.t-khac{background:var(--butter-soft);color:#8a6d0b}
-.late{color:var(--danger);font-weight:600}
-.check{width:28px;height:28px;border-radius:9px;border:2px solid var(--line);display:grid;place-items:center;flex:none;color:transparent;font-weight:800}
-.check[aria-pressed="true"]{background:var(--mint);border-color:var(--mint);color:#134d36}
-.done .t{text-decoration:line-through;color:var(--muted)}
-.empty-note{text-align:center;color:var(--muted);padding:26px 12px;border:2px dashed var(--line);border-radius:20px}
-.empty-note b{display:block;color:var(--ink);margin-bottom:2px}
+.row .t{font-weight:800;font-size:15px;overflow-wrap:anywhere}
+.row .s{font-size:13px;color:var(--muted);font-weight:600;margin-top:2px;overflow-wrap:anywhere}
+.row .x{width:36px;height:36px;border-radius:12px;color:var(--muted);font-size:17px;display:grid;place-items:center}
+.row .x:active{background:var(--pink-soft);color:var(--danger)}
+.day{font-size:13.5px;font-weight:800;color:var(--muted);margin:16px 6px 8px;display:flex;justify-content:space-between}
 
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--paper);border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px))}
-.tabs div{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
-.tabs button{display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 0;font-size:11.5px;font-weight:600;color:var(--muted);border-radius:12px}
-.tabs button span{font-size:21px;line-height:1.2;filter:grayscale(1);opacity:.7}
-.tabs button[aria-current="page"]{color:var(--blue)}
-.tabs button[aria-current="page"] span{filter:none;opacity:1}
+.chip{display:inline-block;font-size:11.5px;font-weight:800;padding:3px 10px;border-radius:99px;background:var(--blue-soft);color:var(--blue);margin-right:6px}
+.chip.t-tiem{background:var(--mint-soft);color:var(--mint)}
+.chip.t-thai{background:var(--pink-soft);color:var(--pink)}
+.chip.t-khac{background:var(--butter-soft);color:#c28b07}
+.chip.t-fever{background:var(--pink-soft);color:var(--danger)}
+.late{color:var(--danger);font-weight:800}
+
+.check{width:32px;height:32px;border-radius:12px;border:2px solid var(--line);display:grid;place-items:center;flex:none;color:transparent;font-weight:900;font-size:15px;background:var(--bg)}
+.check[aria-pressed="true"]{background:var(--mint);border-color:var(--mint);color:#fff}
+.done .t{text-decoration:line-through;color:var(--muted);opacity:0.7}
+
+.empty-note{text-align:center;color:var(--muted);padding:28px 16px;border:2.5px dashed var(--line);border-radius:var(--radius-lg);font-weight:600}
+.empty-note b{display:block;color:var(--ink);font-size:16px;margin-bottom:4px;font-weight:800}
+
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:rgba(255,255,255,0.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:8px 6px calc(8px + env(safe-area-inset-bottom,0px))}
+.tabs div{max-width:500px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:2px}
+.tabs button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;font-size:11px;font-weight:800;color:var(--muted);border-radius:16px}
+.tabs button span{font-size:21px;line-height:1.1;filter:grayscale(0.6);opacity:0.7}
+.tabs button[aria-current="page"]{color:var(--pink);background:var(--pink-soft)}
+.tabs button[aria-current="page"] span{filter:none;opacity:1;transform:scale(1.1)}
 
 #sheet{position:fixed;inset:0;z-index:20;display:none}
 #sheet.open{display:block}
-#sheet .bd{position:absolute;inset:0;background:rgba(10,20,30,.45)}
-#sheet .pn{position:absolute;left:0;right:0;bottom:0;max-width:520px;margin:0 auto;background:var(--paper);border-radius:26px 26px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px));max-height:88vh;overflow-y:auto;animation:up .22s ease-out}
-@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
-#sheet h2{margin:0 0 14px;font-size:18px;font-weight:800}
-.f{margin-bottom:12px}
-.f label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:4px}
-.f input,.f select,.f textarea{width:100%;font-size:16px;padding:11px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);min-height:46px}
-.f textarea{min-height:96px;resize:vertical}
-.err{color:var(--danger);font-size:13px;min-height:18px;margin:-4px 0 6px}
-.hint{font-size:13px;color:var(--muted);margin:0 0 10px}
-hr{border:0;border-top:1px solid var(--line);margin:16px 0}
-#toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;font-weight:600;z-index:30;opacity:0;pointer-events:none;transition:opacity .2s;max-width:86vw;text-align:center}
+#sheet .bd{position:absolute;inset:0;background:rgba(20,30,40,0.45);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+#sheet .pn{position:absolute;left:0;right:0;bottom:0;max-width:500px;margin:0 auto;background:var(--paper);border-radius:32px 32px 0 0;padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));max-height:88vh;overflow-y:auto;animation:up .25s cubic-bezier(0.16,1,0.3,1)}
+@keyframes up{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}
+#sheet h2{margin:0 0 16px;font-size:20px;font-weight:900;text-align:center}
+
+.f{margin-bottom:14px}
+.f label{display:block;font-size:13px;font-weight:800;color:var(--ink);margin-bottom:6px;opacity:0.85}
+.f input,.f select,.f textarea{width:100%;font-size:15.5px;font-weight:600;padding:12px 14px;border-radius:16px;border:2px solid var(--line);background:var(--bg);min-height:48px}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--pink);background:var(--paper)}
+.f textarea{min-height:90px;resize:vertical}
+.err{color:var(--danger);font-size:13px;font-weight:700;min-height:18px;margin:-4px 0 8px;text-align:center}
+.hint{font-size:13px;color:var(--muted);font-weight:600;margin:0 0 12px;line-height:1.5}
+hr{border:0;border-top:1.5px dashed var(--line);margin:18px 0}
+
+#toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 20px;border-radius:99px;font-size:13.5px;font-weight:800;z-index:30;opacity:0;pointer-events:none;transition:opacity .2s;max-width:88vw;box-shadow:0 8px 20px rgba(0,0,0,0.25)}
 #toast.on{opacity:1}
 
-/* Màn hình xác thực Auth */
 #auth-view{display:none;position:fixed;inset:0;background:var(--bg);z-index:100;overflow-y:auto;padding:24px 16px}
 #auth-view.active{display:flex;align-items:center;justify-content:center}
-.auth-box{width:100%;max-width:380px;background:var(--paper);padding:24px;border-radius:24px;box-shadow:var(--shadow)}
-.auth-box h2{margin:0 0 6px;font-size:22px;font-weight:800;text-align:center}
-.auth-box p{margin:0 0 20px;color:var(--muted);font-size:14px;text-align:center}
+.auth-box{width:100%;max-width:380px;background:var(--paper);padding:28px 24px;border-radius:32px;box-shadow:var(--shadow);border:2px solid var(--pink-border)}
+.auth-box h2{margin:0 0 4px;font-size:24px;font-weight:900;text-align:center}
+.auth-box p{margin:0 0 20px;color:var(--muted);font-size:14px;font-weight:600;text-align:center}
+.divider{display:flex;align-items:center;text-align:center;margin:16px 0;color:var(--muted);font-size:12.5px;font-weight:700}
+.divider::before,.divider::after{content:'';flex:1;border-bottom:1.5px dashed var(--line)}
+.divider span{padding:0 10px}
 </style>
 </head>
 <body>
@@ -153,31 +196,45 @@ hr{border:0;border-top:1px solid var(--line);margin:16px 0}
 <!-- MÀN HÌNH ĐĂNG NHẬP / ĐĂNG KÝ -->
 <div id="auth-view">
   <div class="auth-box">
-    <div style="font-size:42px;text-align:center;margin-bottom:8px">🍼</div>
-    <h2 id="auth-title">Đăng nhập</h2>
-    <p id="auth-desc">Đăng nhập để xem và đồng bộ sổ của bé</p>
+    <div style="font-size:52px;text-align:center;margin-bottom:8px">🍼✨</div>
+    <h2 id="auth-title">Sổ của bé</h2>
+    <p id="auth-desc">Đăng nhập để theo dõi và bảo vệ dữ liệu bé yêu</p>
+    
+    <button class="btn btn-google wide" id="btn-google-login">
+      <svg width="20" height="20" viewBox="0 0 18 18">
+        <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.616z"/>
+        <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+        <path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/>
+        <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 7.293C4.672 5.166 6.656 3.58 9 3.58z"/>
+      </svg>
+      Tiếp tục với Google
+    </button>
+
+    <div class="divider"><span>hoặc Email</span></div>
+
     <div class="f">
-      <label>Email</label>
-      <input id="a_email" type="email" placeholder="email@cuaban.com">
+      <label>Email của ba mẹ</label>
+      <input id="a_email" type="email" placeholder="bame@yeube.com">
     </div>
     <div class="f">
       <label>Mật khẩu</label>
       <input id="a_pass" type="password" placeholder="Tối thiểu 6 ký tự">
     </div>
     <div class="err" id="a_err"></div>
-    <button class="btn wide" id="a_btn_submit" style="margin-top:6px">Đăng nhập</button>
-    <button class="btn plain wide" id="a_btn_switch" style="margin-top:8px">Chưa có tài khoản? Đăng ký ngay</button>
+    <button class="btn wide" id="a_btn_submit">Đăng nhập</button>
+    <button class="btn plain wide" id="a_btn_switch" style="margin-top:6px">Chưa có tài khoản? Đăng ký ngay</button>
   </div>
 </div>
 
-<!-- ỨNG DỤNG CHÍNH -->
+<!-- GIAO DIỆN CHÍNH -->
 <div id="app">
   <header class="top">
-    <div class="who"><h1 id="hName">Sổ của bé</h1><p id="hAge"></p></div>
+    <div class="who"><h1 id="hName">Sổ của bé 👶</h1><p id="hAge"></p></div>
     <button class="icon-btn" data-act="settings" aria-label="Hồ sơ và tài khoản">⚙️</button>
   </header>
   <main id="view"></main>
 </div>
+
 <nav class="tabs" aria-label="Điều hướng"><div id="tabs"></div></nav>
 <div id="sheet" role="dialog" aria-modal="true"><div class="bd" data-act="close"></div><div class="pn" id="pn"></div></div>
 <div id="toast" role="status"></div>
@@ -205,11 +262,24 @@ let currentUser = null;
 let userDocRef = null;
 let unsubscribeSnapshot = null;
 
-function blank(){return {baby:{name:"",dob:"",gender:""},growth:[],feeds:[],sleeps:[],events:[],notes:[]};}
-var state = blank();
-var ui = {tab:"home",metric:"w",care:"feed"};
+function blank(){
+  return {
+    baby:{name:"",dob:"",gender:""},
+    growth:[],
+    feeds:[],
+    pumps:[],    // Hút sữa mẹ
+    sleeps:[],
+    diapers:[],  // Tã & tiêu hóa
+    fevers:[],   // Thân nhiệt & thuốc
+    events:[],
+    notes:[]
+  };
+}
 
-// ==================== XỬ LÝ AUTH ====================
+var state = blank();
+var ui = {tab:"home", metric:"w", care:"feed"};
+
+// ==================== AUTH ====================
 let isSignUpMode = false;
 const authView = document.getElementById("auth-view");
 const aEmail = document.getElementById("a_email");
@@ -219,11 +289,24 @@ const aSubmit = document.getElementById("a_btn_submit");
 const aSwitch = document.getElementById("a_btn_switch");
 const aTitle = document.getElementById("auth-title");
 const aDesc = document.getElementById("auth-desc");
+const btnGoogle = document.getElementById("btn-google-login");
+
+btnGoogle.onclick = function(){
+  const provider = new firebase.auth.GoogleAuthProvider();
+  aErr.textContent = "";
+  auth.signInWithPopup(provider).catch(function(err){
+    if(err.code === "auth/popup-blocked" || err.code === "auth/popup-closed-by-user"){
+      auth.signInWithRedirect(provider);
+    } else {
+      aErr.textContent = "Lỗi Google: " + err.message;
+    }
+  });
+};
 
 aSwitch.onclick = function(){
   isSignUpMode = !isSignUpMode;
-  aTitle.textContent = isSignUpMode ? "Tạo tài khoản mới" : "Đăng nhập";
-  aDesc.textContent = isSignUpMode ? "Tạo tài khoản để lưu an toàn dữ liệu bé yêu" : "Đăng nhập để xem và đồng bộ sổ của bé";
+  aTitle.textContent = isSignUpMode ? "Tạo tài khoản mới 🧸" : "Sổ của bé 🍼";
+  aDesc.textContent = isSignUpMode ? "Tạo tài khoản để lưu an toàn dữ liệu bé yêu" : "Đăng nhập để theo dõi và bảo vệ dữ liệu bé yêu";
   aSubmit.textContent = isSignUpMode ? "Đăng ký" : "Đăng nhập";
   aSwitch.textContent = isSignUpMode ? "Đã có tài khoản? Đăng nhập" : "Chưa có tài khoản? Đăng ký ngay";
   aErr.textContent = "";
@@ -263,14 +346,12 @@ auth.onAuthStateChanged(function(user){
     authView.classList.remove("active");
     userDocRef = db.collection("users").doc(user.uid);
     
-    // Đọc cache local trước
     try {
       var local = localStorage.getItem("baby_cache_" + user.uid);
       if(local) state = Object.assign(blank(), JSON.parse(local));
     } catch(e){}
     render();
 
-    // Lắng nghe dữ liệu thời gian thực từ Firestore
     if(unsubscribeSnapshot) unsubscribeSnapshot();
     unsubscribeSnapshot = userDocRef.onSnapshot(function(doc){
       if(doc.exists){
@@ -302,7 +383,7 @@ function save(){
   });
 }
 
-/* helpers */
+/* Helpers */
 function $(s){return document.querySelector(s);}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
@@ -318,32 +399,32 @@ function fmtMin(m){m=Math.round(m);var h=Math.floor(m/60),r=m%60;if(h&&r)return 
 function dayDiff(a,b){return Math.round((new Date(a+"T00:00")-new Date(b+"T00:00"))/864e5);}
 function sleepMin(s){return(new Date(s.end)-new Date(s.start))/60000;}
 function ageText(){
-  var dob=state.baby.dob;if(!dob)return"Nhập ngày sinh của bé để xem tuổi";
+  var dob=state.baby.dob;if(!dob)return"Nhập ngày sinh để xem tuổi bé yêu";
   var b=new Date(dob+"T00:00"),n=new Date();n.setHours(0,0,0,0);
   if(b>n)return"Dự sinh "+fmtDate(dob);
   var m=(n.getFullYear()-b.getFullYear())*12+n.getMonth()-b.getMonth();if(n.getDate()<b.getDate())m--;
   var days=Math.round((n-b)/864e5);
-  if(m<1){return days<7?days+" ngày tuổi":Math.floor(days/7)+" tuần "+(days%7?days%7+" ngày":"")+" tuổi";}
-  if(m<24)return m+" tháng tuổi";
-  return Math.floor(m/12)+" tuổi "+(m%12?m%12+" tháng":"");
+  if(m<1){return days<7?days+" ngày tuổi 👶":Math.floor(days/7)+" tuần "+(days%7?days%7+" ngày":"")+" tuổi 🍼";}
+  if(m<24)return m+" tháng tuổi 🎈";
+  return Math.floor(m/12)+" tuổi "+(m%12?m%12+" tháng":"")+" 🌟";
 }
 function toast(t){var el=$("#toast");el.textContent=t;el.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){el.classList.remove("on");},2400);}
-function sortBy(arr,key,desc){return arr.slice().sort(function(a,b){return(a[key]<b[key]?-1:a[key]>b[key]?1:0)*(desc?-1:1);});}
+function sortBy(arr,key,desc){return (arr||[]).slice().sort(function(a,b){return(a[key]<b[key]?-1:a[key]>b[key]?1:0)*(desc?-1:1);});}
 
 var METRICS={
   w:{label:"Cân nặng",unit:"kg",dec:2},
   h:{label:"Chiều cao",unit:"cm",dec:1},
   hc:{label:"Vòng đầu",unit:"cm",dec:1}
 };
-var TABS=[["home","🏠","Tổng quan"],["growth","📈","Phát triển"],["care","🍼","Ăn & ngủ"],["plan","📅","Lịch"],["notes","📝","Nhật ký"]];
+var TABS=[["home","🏠","Tổng quan"],["growth","📈","Phát triển"],["care","🍼","Chăm sóc"],["plan","📅","Lịch hẹn"],["notes","📝","Nhật ký"]];
 
-/* sheet */
+/* Sheet Modal */
 var sheetSubmit=null;
 function openSheet(title,body,submitLabel,onSubmit){
   sheetSubmit=onSubmit||null;
   $("#pn").innerHTML='<h2>'+esc(title)+'</h2>'+body+'<div class="err" id="sErr"></div>'+
-    (onSubmit?'<button class="btn wide" data-act="submit">'+esc(submitLabel||"Lưu")+'</button>':'')+
-    '<button class="btn plain wide" data-act="close" style="margin-top:6px">'+(onSubmit?"Huỷ":"Đóng")+'</button>';
+    (onSubmit?'<button class="btn wide" data-act="submit">'+esc(submitLabel||"Lưu lại ✨")+'</button>':'')+
+    '<button class="btn plain wide" data-act="close" style="margin-top:8px">'+(onSubmit?"Huỷ":"Đóng")+'</button>';
   $("#sheet").classList.add("open");
   var first=$("#pn input,#pn textarea,#pn select");if(first&&!/^(date|datetime-local)$/.test(first.type))setTimeout(function(){try{first.focus();}catch(e){}},50);
 }
@@ -351,130 +432,241 @@ function closeSheet(){$("#sheet").classList.remove("open");sheetSubmit=null;}
 function vals(){var o={};document.querySelectorAll("#pn [name]").forEach(function(el){o[el.name]=el.value;});return o;}
 function sErr(t){$("#sErr").textContent=t;}
 function confirmSheet(msg,onYes){
-  openSheet("Xác nhận","<p class='hint'>"+esc(msg)+"</p>","Xoá",onYes);
+  openSheet("Xác nhận ⚠️","<p class='hint' style='text-align:center'>"+esc(msg)+"</p>","Đồng ý xoá",onYes);
 }
 
-/* forms */
+/* ==================== FORMS GHI CHÉP ==================== */
+
+// 1. Chỉ số phát triển
 function fGrowth(){
-  openSheet("Thêm chỉ số",
+  openSheet("Thêm chỉ số phát triển 📏",
    '<div class="f"><label for="g_date">Ngày đo</label><input id="g_date" name="date" type="date" value="'+isoDate()+'"></div>'+
-   '<div class="f" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div><label for="g_w">Cân nặng (kg)</label><input id="g_w" name="w" inputmode="decimal" placeholder="vd: 6,4"></div>'+
-   '<div><label for="g_h">Chiều cao (cm)</label><input id="g_h" name="h" inputmode="decimal" placeholder="vd: 63"></div></div>'+
+   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div class="f"><label for="g_w">Cân nặng (kg)</label><input id="g_w" name="w" inputmode="decimal" placeholder="vd: 6.4"></div>'+
+   '<div class="f"><label for="g_h">Chiều cao (cm)</label><input id="g_h" name="h" inputmode="decimal" placeholder="vd: 63"></div></div>'+
    '<div class="f"><label for="g_hc">Vòng đầu (cm)</label><input id="g_hc" name="hc" inputmode="decimal" placeholder="Không bắt buộc"></div>'+
-   '<div class="f"><label for="g_n">Ghi chú</label><input id="g_n" name="note" placeholder="Không bắt buộc"></div>',
+   '<div class="f"><label for="g_n">Ghi chú</label><input id="g_n" name="note" placeholder="vd: Bé cứng cáp..."></div>',
    "Lưu chỉ số",function(){
     var v=vals(),w=num(v.w),h=num(v.h),hc=num(v.hc);
-    if(!v.date)return sErr("Chọn ngày đo.");
+    if(!v.date)return sErr("Vui lòng chọn ngày đo.");
     if([w,h,hc].some(function(x){return x!==x;}))return sErr("Số đo phải là số lớn hơn 0.");
-    if(w===null&&h===null&&hc===null)return sErr("Nhập ít nhất một chỉ số.");
+    if(w===null&&h===null&&hc===null)return sErr("Nhập ít nhất một chỉ số đo.");
     state.growth.push({id:uid(),date:v.date,w:w,h:h,hc:hc,note:v.note.trim()});
-    save();closeSheet();render();toast("Đã lưu chỉ số");
+    save();closeSheet();render();toast("Đã lưu chỉ số mới ✨");
   });
 }
+
+// 2. Cữ bú của bé
 function fFeed(){
-  openSheet("Ghi cữ sữa",
+  openSheet("Ghi cữ bú của bé 🍼",
    '<div class="f"><label for="f_dt">Thời điểm</label><input id="f_dt" name="dt" type="datetime-local" value="'+isoDT()+'"></div>'+
-   '<div class="f" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div><label for="f_ml">Lượng sữa (ml)</label><input id="f_ml" name="ml" inputmode="numeric" placeholder="vd: 120"></div>'+
-   '<div><label for="f_t">Loại sữa</label><select id="f_t" name="type"><option>Sữa mẹ</option><option>Sữa công thức</option><option>Sữa mẹ + công thức</option></select></div></div>',
+   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div class="f"><label for="f_ml">Lượng sữa (ml)</label><input id="f_ml" name="ml" inputmode="numeric" placeholder="vd: 120"></div>'+
+   '<div class="f"><label for="f_t">Loại sữa</label><select id="f_t" name="type"><option>Sữa mẹ (bình)</option><option>Sữa công thức</option><option>Bú mẹ trực tiếp</option><option>Sữa mẹ + công thức</option></select></div></div>',
    "Lưu cữ sữa",function(){
     var v=vals(),ml=num(v.ml);
-    if(!v.dt)return sErr("Chọn thời điểm.");
+    if(!v.dt)return sErr("Vui lòng chọn thời điểm.");
     if(ml===null||ml!==ml)return sErr("Nhập lượng sữa bằng số (ml).");
     state.feeds.push({id:uid(),dt:v.dt,ml:ml,type:v.type});
-    save();closeSheet();render();toast("Đã lưu cữ sữa");
+    save();closeSheet();render();toast("Đã ghi cữ sữa 🍼");
   });
 }
+
+// 3. Mẹ hút sữa (Pumping)
+function fPump(){
+  openSheet("Ghi nhận cữ hút sữa của mẹ 🌸",
+   '<div class="f"><label for="p_dt">Thời điểm hút</label><input id="p_dt" name="dt" type="datetime-local" value="'+isoDT()+'"></div>'+
+   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'+
+     '<div class="f"><label for="p_l">Ngực trái L (ml)</label><input id="p_l" name="mlL" inputmode="numeric" placeholder="vd: 60"></div>'+
+     '<div class="f"><label for="p_r">Ngực phải R (ml)</label><input id="p_r" name="mlR" inputmode="numeric" placeholder="vd: 70"></div>'+
+   '</div>'+
+   '<div class="f"><label for="p_tot">Hoặc nhập thẳng Tổng lượng sữa (ml)</label><input id="p_tot" name="mlTot" inputmode="numeric" placeholder="vd: 130"></div>'+
+   '<div class="f"><label for="p_n">Ghi chú</label><input id="p_n" name="note" placeholder="vd: Cữ sáng, trữ đông..."></div>',
+   "Lưu cữ hút",function(){
+    var v=vals();
+    if(!v.dt)return sErr("Vui lòng chọn thời điểm hút sữa.");
+    var l=num(v.mlL)||0, r=num(v.mlR)||0, totInput=num(v.mlTot);
+    var total = totInput ? totInput : (l + r);
+    if(!total || total <= 0) return sErr("Vui lòng nhập lượng sữa hút được (ml).");
+    
+    state.pumps = state.pumps || [];
+    state.pumps.push({id:uid(), dt:v.dt, mlL:l, mlR:r, total:total, note:v.note.trim()});
+    save();closeSheet();render();toast("Đã ghi cữ hút sữa 🌸");
+  });
+}
+
+// 4. Giấc ngủ
 function fSleep(){
   var now=new Date(),st=new Date(now.getTime()-60*60000);
-  openSheet("Ghi giấc ngủ",
+  openSheet("Ghi giấc ngủ của bé 🌙",
    '<div class="f"><label for="s_a">Bắt đầu ngủ</label><input id="s_a" name="start" type="datetime-local" value="'+isoDT(st)+'"></div>'+
    '<div class="f"><label for="s_b">Thức dậy</label><input id="s_b" name="end" type="datetime-local" value="'+isoDT(now)+'"></div>',
    "Lưu giấc ngủ",function(){
     var v=vals();
-    if(!v.start||!v.end)return sErr("Nhập giờ bắt đầu và giờ thức dậy.");
+    if(!v.start||!v.end)return sErr("Vui lòng chọn giờ bắt đầu và thức dậy.");
     if(new Date(v.end)<=new Date(v.start))return sErr("Giờ thức dậy phải sau giờ bắt đầu.");
     state.sleeps.push({id:uid(),start:v.start,end:v.end});
-    save();closeSheet();render();toast("Đã lưu giấc ngủ");
+    save();closeSheet();render();toast("Đã lưu giấc ngủ 🌙");
   });
 }
+
+// 5. Tã & Tiêu hóa (Diaper)
+function fDiaper(){
+  openSheet("Ghi nhận thay tã / Tiêu hoá 🧷",
+   '<div class="f"><label for="d_dt">Thời điểm</label><input id="d_dt" name="dt" type="datetime-local" value="'+isoDT()+'"></div>'+
+   '<div class="f"><label for="d_type">Tình trạng tã</label><select id="d_type" name="type">'+
+     '<option value="wet">💧 Tã ướt (Chỉ tè)</option>'+
+     '<option value="dirty">💩 Tã bẩn (Đi ị)</option>'+
+     '<option value="both">💧💩 Cả tè và ị</option>'+
+   '</select></div>'+
+   '<div class="f"><label for="d_poo">Đặc điểm phân (nếu có)</label><select id="d_poo" name="poo">'+
+     '<option value="Bình thường">Hoa cà hoa cải / Bình thường</option>'+
+     '<option value="Lỏng / Nhầy">Lỏng / Có bọt / Nhầy</option>'+
+     '<option value="Khuôn mềm">Khuôn mềm</option>'+
+     '<option value="Táo bón">Táo bón / Cứng</option>'+
+   '</select></div>'+
+   '<div class="f"><label for="d_note">Ghi chú</label><input id="d_note" name="note" placeholder="vd: Màu vàng tươi, hăm tã nhẹ..."></div>',
+   "Lưu thay tã",function(){
+    var v=vals();
+    if(!v.dt)return sErr("Chọn thời điểm.");
+    state.diapers = state.diapers || [];
+    state.diapers.push({id:uid(), dt:v.dt, type:v.type, poo:v.poo, note:v.note.trim()});
+    save();closeSheet();render();toast("Đã lưu thay tã 🧷");
+  });
+}
+
+// 6. Thân nhiệt & Sốt (Fever)
+function fFever(){
+  openSheet("Theo dõi thân nhiệt & Sốt 🌡️",
+   '<div class="f"><label for="fe_dt">Thời điểm đo</label><input id="fe_dt" name="dt" type="datetime-local" value="'+isoDT()+'"></div>'+
+   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'+
+     '<div class="f"><label for="fe_t">Nhiệt độ (°C)</label><input id="fe_t" name="temp" inputmode="decimal" placeholder="vd: 38.2"></div>'+
+     '<div class="f"><label for="fe_pos">Vị trí đo</label><select id="fe_pos" name="pos"><option>Nách</option><option>Trán</option><option>Tai</option><option>Hậu môn</option></select></div>'+
+   '</div>'+
+   '<div class="f"><label for="fe_med">Thuốc đã uống (nếu có)</label><input id="fe_med" name="med" placeholder="vd: Hapacol 80mg lúc 14h..."></div>'+
+   '<div class="f"><label for="fe_n">Ghi chú biểu hiện</label><input id="fe_n" name="note" placeholder="vd: Bé quấy, chân tay ấm..."></div>',
+   "Lưu thân nhiệt",function(){
+    var v=vals(), t=num(v.temp);
+    if(!v.dt)return sErr("Vui lòng chọn thời điểm đo.");
+    if(!t || t < 34 || t > 43)return sErr("Nhiệt độ không hợp lệ (nhập từ 35 đến 42°C).");
+    state.fevers = state.fevers || [];
+    state.fevers.push({id:uid(), dt:v.dt, temp:t, pos:v.pos, med:v.med.trim(), note:v.note.trim()});
+    save();closeSheet();render();toast("Đã lưu thân nhiệt 🌡️");
+  });
+}
+
+// 7. Lịch hẹn & Tiêm phòng
 function fEvent(){
-  openSheet("Thêm lịch hẹn",
-   '<div class="f"><label for="e_t">Nội dung</label><input id="e_t" name="title" placeholder="vd: Tiêm mũi 5 trong 1"></div>'+
-   '<div class="f"><label for="e_k">Loại</label><select id="e_k" name="kind"><option value="tiem">Tiêm phòng</option><option value="be">Khám bé</option><option value="thai">Khám thai</option><option value="khac">Khác</option></select></div>'+
-   '<div class="f" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div><label for="e_d">Ngày</label><input id="e_d" name="date" type="date" value="'+isoDate()+'"></div>'+
-   '<div><label for="e_h">Giờ</label><input id="e_h" name="time" type="time"></div></div>',
+  openSheet("Thêm lịch hẹn / Tiêm phòng 📅",
+   '<div class="f"><label for="e_t">Nội dung</label><input id="e_t" name="title" placeholder="vd: Tiêm mũi 6 trong 1"></div>'+
+   '<div class="f"><label for="e_k">Phân loại</label><select id="e_k" name="kind"><option value="tiem">💉 Tiêm phòng</option><option value="be">🩺 Khám bé</option><option value="thai">🤰 Khám thai</option><option value="khac">📌 Khác</option></select></div>'+
+   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div class="f"><label for="e_d">Ngày hẹn</label><input id="e_d" name="date" type="date" value="'+isoDate()+'"></div>'+
+   '<div class="f"><label for="e_h">Giờ</label><input id="e_h" name="time" type="time"></div></div>',
    "Lưu lịch hẹn",function(){
     var v=vals();
     if(!v.title.trim())return sErr("Nhập nội dung lịch hẹn.");
     if(!v.date)return sErr("Chọn ngày.");
     state.events.push({id:uid(),title:v.title.trim(),kind:v.kind,date:v.date,time:v.time,done:false});
-    save();closeSheet();render();toast("Đã lưu lịch hẹn");
+    save();closeSheet();render();toast("Đã thêm lịch hẹn 📅");
   });
 }
+
+// 8. Nhật ký
 function fNote(){
-  openSheet("Viết nhật ký",
+  openSheet("Nhật ký khoảnh khắc 📝",
    '<div class="f"><label for="n_d">Ngày</label><input id="n_d" name="date" type="date" value="'+isoDate()+'"></div>'+
-   '<div class="f"><label for="n_t">Hôm nay bé thế nào?</label><textarea id="n_t" name="text" placeholder="Ví dụ: bé biết lẫy, ăn dặm lần đầu, sốt nhẹ..."></textarea></div>',
+   '<div class="f"><label for="n_t">Hôm nay bé yêu thế nào?</label><textarea id="n_t" name="text" placeholder="Ví dụ: Bé biết lẫy, hóng chuyện rất tươi..."></textarea></div>',
    "Lưu nhật ký",function(){
     var v=vals();
     if(!v.text.trim())return sErr("Nhập nội dung nhật ký.");
     state.notes.push({id:uid(),date:v.date||isoDate(),text:v.text.trim(),ts:Date.now()});
-    save();closeSheet();render();toast("Đã lưu nhật ký");
-  });
-}
-function fSettings(){
-  var b=state.baby;
-  var userEmail = currentUser ? currentUser.email : "";
-  openSheet("Hồ sơ & Tài khoản",
-   '<div class="f"><label>Tài khoản đang đăng nhập</label><div style="font-weight:700;color:var(--blue)">'+esc(userEmail)+'</div></div>'+
-   '<button class="btn ghost wide small" data-act="logout" style="margin-bottom:16px">Đăng xuất</button>'+
-   '<hr>'+
-   '<div class="f"><label for="b_n">Tên bé</label><input id="b_n" name="name" value="'+esc(b.name)+'" placeholder="vd: Bống"></div>'+
-   '<div class="f" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div><label for="b_d">Ngày sinh</label><input id="b_d" name="dob" type="date" value="'+esc(b.dob)+'"></div>'+
-   '<div><label for="b_g">Giới tính</label><select id="b_g" name="gender"><option value="">Không chọn</option><option value="Bé trai"'+(b.gender==="Bé trai"?" selected":"")+'>Bé trai</option><option value="Bé gái"'+(b.gender==="Bé gái"?" selected":"")+'>Bé gái</option></select></div></div>'+
-   '<button class="btn danger wide small" data-act="wipe" style="margin-top:16px">Xoá toàn bộ dữ liệu của bé</button>',
-   "Lưu hồ sơ",function(){
-    var v=vals();state.baby={name:v.name.trim(),dob:v.dob,gender:v.gender};
-    save();closeSheet();render();toast("Đã lưu hồ sơ");
+    save();closeSheet();render();toast("Đã lưu nhật ký ✨");
   });
 }
 
-/* views */
+// 9. Cài đặt hồ sơ & Tài khoản
+function fSettings(){
+  var b=state.baby;
+  var userDisplay = currentUser ? (currentUser.displayName || currentUser.email) : "";
+  var photoUrl = (currentUser && currentUser.photoURL) ? currentUser.photoURL : "";
+  
+  openSheet("Hồ sơ bé & Tài khoản ⚙️",
+   '<div class="f" style="display:flex;align-items:center;gap:12px;background:var(--bg);padding:12px;border-radius:18px;border:1px solid var(--line)">'+
+     (photoUrl ? '<img src="'+photoUrl+'" style="width:42px;height:42px;border-radius:50%;object-fit:cover">' : '<div style="font-size:32px">👤</div>')+
+     '<div style="flex:1;min-width:0"><div style="font-size:12px;color:var(--muted);font-weight:700">Tài khoản Google/Email</div><div style="font-weight:800;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(userDisplay)+'</div></div>'+
+   '</div>'+
+   '<button class="btn ghost wide small" data-act="logout" style="margin-bottom:16px">Đăng xuất</button>'+
+   '<hr>'+
+   '<div class="f"><label for="b_n">Tên ở nhà của bé</label><input id="b_n" name="name" value="'+esc(b.name)+'" placeholder="vd: Bống, Cún, Thỏ..."></div>'+
+   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div class="f"><label for="b_d">Ngày sinh</label><input id="b_d" name="dob" type="date" value="'+esc(b.dob)+'"></div>'+
+   '<div class="f"><label for="b_g">Giới tính</label><select id="b_g" name="gender"><option value="">Chưa chọn</option><option value="Bé trai"'+(b.gender==="Bé trai"?" selected":"")+'>👦 Bé trai</option><option value="Bé gái"'+(b.gender==="Bé gái"?" selected":"")+'>👧 Bé gái</option></select></div></div>'+
+   '<button class="btn danger wide small" data-act="wipe" style="margin-top:16px">Xoá toàn bộ dữ liệu bé yêu</button>',
+   "Lưu hồ sơ",function(){
+    var v=vals();state.baby={name:v.name.trim(),dob:v.dob,gender:v.gender};
+    save();closeSheet();render();toast("Đã cập nhật hồ sơ bé 👶");
+  });
+}
+
+/* ==================== VIEWS GIAO DIỆN ==================== */
+
 function latestOf(key){
-  var arr=sortBy(state.growth.filter(function(g){return g[key]!=null;}),"date",true);
+  var arr=sortBy((state.growth||[]).filter(function(g){return g[key]!=null;}),"date",true);
   return {cur:arr[0]||null,prev:arr[1]||null};
 }
+
+// VIEW 1: TRANG CHỦ
 function vHome(){
   var h="";
   if(!state.baby.name&&!state.baby.dob){
-    h+='<section class="card" style="background:var(--butter-soft)"><div class="t" style="font-weight:700">Bắt đầu với hồ sơ của bé</div><p class="hint" style="margin:4px 0 12px">Nhập tên và ngày sinh để xem tuổi của bé và nhắc lịch chính xác.</p><button class="btn small" data-act="settings">Nhập hồ sơ bé</button></section>';
+    h+='<section class="card" style="background:var(--butter-soft);border:2px dashed var(--butter)"><div class="t" style="font-weight:900;font-size:16px">Chào mừng ba mẹ! 🐣</div><p class="hint" style="margin:4px 0 12px">Nhập tên và ngày sinh để xem tuổi bé và theo dõi chuẩn xác nhất nhé.</p><button class="btn small" data-act="settings">Nhập hồ sơ cho bé</button></section>';
   }
+  
+  // Dải chỉ số thể chất
   h+='<section><div class="strip">';
   ["w","h","hc"].forEach(function(k){
     var m=METRICS[k],L=latestOf(k),cls="",val='<span>--</span>',d='Chưa có số đo';
     if(L.cur){
       val=fmtNum(L.cur[k],m.dec)+'<small>'+m.unit+'</small>';d='Đo '+fmtShort(L.cur.date);
-      if(L.prev){var diff=L.cur[k]-L.prev[k];d=(diff>=0?"+":"-")+fmtNum(Math.abs(diff),m.dec)+" "+m.unit+" so với lần trước";}
+      if(L.prev){var diff=L.cur[k]-L.prev[k];d=(diff>=0?"+":"-")+fmtNum(Math.abs(diff),m.dec)+" "+m.unit+" so với trước";}
     }else cls="empty";
     h+='<div class="'+(k==="w"?"w ":"")+cls+'"><div class="k">'+m.label+'</div><div class="v">'+val+'</div><div class="d '+(L.prev&&L.cur[k]>L.prev[k]?"up":"")+'">'+d+'</div></div>';
   });
   h+='</div></section>';
+  
+  // Thống kê 4 ô tròn hôm nay
   var today=isoDate();
-  var ml=state.feeds.filter(function(f){return f.dt.slice(0,10)===today;}).reduce(function(a,f){return a+f.ml;},0);
-  var sl=state.sleeps.filter(function(s){return s.end.slice(0,10)===today;}).reduce(function(a,s){return a+sleepMin(s);},0);
-  h+='<section class="pair"><div class="mini milk"><div class="k">Sữa hôm nay</div><div class="v">'+fmtNum(ml,0)+' <small>ml</small></div></div>'+
-     '<div class="mini sleep"><div class="k">Ngủ hôm nay</div><div class="v">'+(sl?fmtMin(sl):"0p")+'</div></div></section>';
-  var nxt=sortBy(state.events.filter(function(e){return!e.done;}),"date",false)[0];
-  h+='<section><div class="sec-title">Lịch sắp tới</div>';
-  if(nxt){h+=eventRow(nxt);}else h+='<div class="empty-note"><b>Chưa có lịch hẹn</b>Thêm lịch khám hoặc tiêm phòng ở tab Lịch.</div>';
-  h+='</section><section><div class="sec-title">Ghi nhanh</div><div class="quick">'+
-     '<button class="btn" data-act="addGrowth">+ Chỉ số</button><button class="btn ghost" data-act="addFeed">+ Cữ sữa</button>'+
-     '<button class="btn ghost" data-act="addSleep">+ Giấc ngủ</button><button class="btn ghost" data-act="addNote">+ Nhật ký</button></div></section>';
+  var feedMl=(state.feeds||[]).filter(function(f){return f.dt.slice(0,10)===today;}).reduce(function(a,f){return a+f.ml;},0);
+  var pumpMl=(state.pumps||[]).filter(function(p){return p.dt.slice(0,10)===today;}).reduce(function(a,p){return a+p.total;},0);
+  var sleepMinTot=(state.sleeps||[]).filter(function(s){return s.end.slice(0,10)===today;}).reduce(function(a,s){return a+sleepMin(s);},0);
+  var diaperCount=(state.diapers||[]).filter(function(d){return d.dt.slice(0,10)===today;}).length;
+
+  h+='<section><div class="sec-title"><span>📊</span> Hôm nay của bé</div><div class="grid-stats">'+
+     '<div class="mini milk"><div class="k">🍼 Bé đã bú</div><div class="v">'+fmtNum(feedMl,0)+' <small>ml</small></div></div>'+
+     '<div class="mini pump"><div class="k">🌸 Mẹ hút sữa</div><div class="v">'+fmtNum(pumpMl,0)+' <small>ml</small></div></div>'+
+     '<div class="mini sleep"><div class="k">🌙 Bé ngủ</div><div class="v">'+(sleepMinTot?fmtMin(sleepMinTot):"0p")+'</div></div>'+
+     '<div class="mini diaper"><div class="k">🧷 Thay tã</div><div class="v">'+diaperCount+' <small>lần</small></div></div>'+
+     '</div></section>';
+
+  // Lịch hẹn tiếp theo
+  var nxt=sortBy((state.events||[]).filter(function(e){return!e.done;}),"date",false)[0];
+  h+='<section><div class="sec-title"><span>📅</span> Lịch hẹn sắp tới</div>';
+  if(nxt){h+=eventRow(nxt);}else h+='<div class="empty-note"><b>Chưa có lịch hẹn nào</b>Thêm lịch tiêm phòng hoặc khám định kỳ ở tab Lịch hẹn.</div>';
+  h+='</section>';
+
+  // Ghi nhanh
+  h+='<section><div class="sec-title"><span>⚡</span> Ghi nhanh một chạm</div><div class="quick">'+
+     '<button class="btn ghost" data-act="addFeed">🍼 Bú bình</button>'+
+     '<button class="btn ghost" data-act="addPump">🌸 Hút sữa</button>'+
+     '<button class="btn ghost" data-act="addDiaper">🧷 Thay tã</button>'+
+     '<button class="btn ghost" data-act="addSleep">🌙 Bé ngủ</button>'+
+     '<button class="btn ghost" data-act="addFever">🌡️ Cặp nhiệt</button>'+
+     '<button class="btn ghost" data-act="addGrowth">📏 Chỉ số</button>'+
+     '</div></section>';
   return h;
 }
+
+// VIEW 2: PHÁT TRIỂN & BIỂU ĐỒ
 function chart(key){
-  var m=METRICS[key],pts=sortBy(state.growth.filter(function(g){return g[key]!=null;}),"date",false);
-  if(pts.length<2)return '<div class="empty-note"><b>Cần ít nhất 2 lần đo</b>'+(pts.length?"Đã có 1 lần đo. Thêm một lần nữa để thấy đường phát triển.":"Thêm số đo đầu tiên của bé để bắt đầu.")+'</div>';
+  var m=METRICS[key],pts=sortBy((state.growth||[]).filter(function(g){return g[key]!=null;}),"date",false);
+  if(pts.length<2)return '<div class="empty-note"><b>Cần ít nhất 2 lần đo 📈</b>'+(pts.length?"Đã có 1 số đo. Thêm một lần nữa để vẽ biểu đồ tăng trưởng nhé.":"Ghi lại số đo đầu tiên của bé để bắt đầu theo dõi.")+'</div>';
   var W=340,H=210,L=40,R=16,T=18,B=30;
   var vs=pts.map(function(p){return p[key];}),mn=Math.min.apply(null,vs),mx=Math.max.apply(null,vs);
   var pad=(mx-mn)*0.2||mx*0.1||1;mn=Math.max(0,mn-pad);mx=mx+pad;
@@ -486,87 +678,148 @@ function chart(key){
   var path=pts.map(function(p,i){return(i?"L":"M")+X(p.date).toFixed(1)+" "+Y(p[key]).toFixed(1);}).join(" ");
   s+='<path class="ln" d="'+path+'"/>';
   pts.forEach(function(p,i){
-    var x=X(p.date),y=Y(p[key]);s+='<circle class="dot" cx="'+x+'" cy="'+y+'" r="5"/>';
+    var x=X(p.date),y=Y(p[key]);s+='<circle class="dot" cx="'+x+'" cy="'+y+'" r="5.5"/>';
     if(pts.length<=8||i===pts.length-1)s+='<text class="val" x="'+x+'" y="'+(y-10)+'" text-anchor="'+(i===0?"start":i===pts.length-1?"end":"middle")+'">'+fmtNum(p[key],m.dec)+'</text>';
   });
   s+='<text x="'+L+'" y="'+(H-8)+'" text-anchor="start">'+fmtShort(pts[0].date)+'</text><text x="'+(W-R)+'" y="'+(H-8)+'" text-anchor="end">'+fmtShort(pts[pts.length-1].date)+'</text></svg>';
   return s;
 }
+
 function vGrowth(){
   var m=METRICS[ui.metric];
-  var h='<div class="seg" role="group" aria-label="Chọn chỉ số">'+["w","h","hc"].map(function(k){return '<button data-act="metric" data-k="'+k+'" aria-pressed="'+(ui.metric===k)+'">'+METRICS[k].label+'</button>';}).join("")+'</div>';
-  h+='<section class="card" style="padding:12px 10px 8px">'+chart(ui.metric)+'</section>';
-  h+='<section><button class="btn wide" data-act="addGrowth">+ Thêm chỉ số</button></section>';
-  var all=sortBy(state.growth,"date",true);
-  h+='<section><div class="sec-title">Lịch sử đo</div>';
-  if(!all.length)h+='<div class="empty-note"><b>Chưa có số đo nào</b>Bấm Thêm chỉ số để ghi cân nặng, chiều cao, vòng đầu.</div>';
+  var h='<div class="seg" role="group">'+["w","h","hc"].map(function(k){return '<button data-act="metric" data-k="'+k+'" aria-pressed="'+(ui.metric===k)+'">'+METRICS[k].label+'</button>';}).join("")+'</div>';
+  h+='<section class="card" style="padding:14px 10px 10px">'+chart(ui.metric)+'</section>';
+  h+='<section><button class="btn wide" data-act="addGrowth">+ Thêm chỉ số đo mới 📏</button></section>';
+  var all=sortBy(state.growth||[],"date",true);
+  h+='<section><div class="sec-title"><span>📋</span> Lịch sử đo</div>';
+  if(!all.length)h+='<div class="empty-note"><b>Chưa có số đo nào</b>Bấm Thêm chỉ số để ghi cân nặng, chiều cao, vòng đầu của bé.</div>';
   else{h+='<div class="list">'+all.map(function(g){
     var parts=[];["w","h","hc"].forEach(function(k){if(g[k]!=null)parts.push(METRICS[k].label+" "+fmtNum(g[k],METRICS[k].dec)+" "+METRICS[k].unit);});
-    return '<div class="row"><div class="main"><div class="t">'+fmtDate(g.date)+'</div><div class="s">'+parts.join(" · ")+(g.note?'<br>'+esc(g.note):"")+'</div></div><button class="x" data-act="del" data-c="growth" data-id="'+g.id+'" aria-label="Xoá lần đo">✕</button></div>';
+    return '<div class="row"><div class="main"><div class="t">'+fmtDate(g.date)+'</div><div class="s">'+parts.join(" · ")+(g.note?'<br>'+esc(g.note):"")+'</div></div><button class="x" data-act="del" data-c="growth" data-id="'+g.id+'">✕</button></div>';
   }).join("")+'</div>';}
   return h+'</section>';
 }
+
+// VIEW 3: CHĂM SÓC HÀNG NGÀY (Bú, Hút sữa, Ngủ, Tã, Sốt)
 function vCare(){
-  var h='<div class="seg" role="group"><button data-act="care" data-k="feed" aria-pressed="'+(ui.care==="feed")+'">Sữa</button><button data-act="care" data-k="sleep" aria-pressed="'+(ui.care==="sleep")+'">Giấc ngủ</button></div>';
-  var days={},arr;
+  var h='<div class="seg" role="group">'+
+    '<button data-act="care" data-k="feed" aria-pressed="'+(ui.care==="feed")+'">🍼 Bé bú</button>'+
+    '<button data-act="care" data-k="pump" aria-pressed="'+(ui.care==="pump")+'">🌸 Hút sữa</button>'+
+    '<button data-act="care" data-k="diaper" aria-pressed="'+(ui.care==="diaper")+'">🧷 Thay tã</button>'+
+    '<button data-act="care" data-k="sleep" aria-pressed="'+(ui.care==="sleep")+'">🌙 Giấc ngủ</button>'+
+    '<button data-act="care" data-k="fever" aria-pressed="'+(ui.care==="fever")+'">🌡️ Sốt/Thuốc</button>'+
+  '</div>';
+
+  var days={}, arr;
+
+  // TAB 1: BÉ BÚ
   if(ui.care==="feed"){
-    arr=sortBy(state.feeds,"dt",true).slice(0,200);
-    h+='<section><button class="btn wide" data-act="addFeed">+ Ghi cữ sữa</button></section>';
+    arr=sortBy(state.feeds||[],"dt",true).slice(0,150);
+    h+='<section><button class="btn wide" data-act="addFeed">+ Ghi cữ bú của bé 🍼</button></section>';
     arr.forEach(function(f){var d=f.dt.slice(0,10);(days[d]=days[d]||[]).push(f);});
     var keys=Object.keys(days).sort().reverse();
-    if(!keys.length)return h+'<div class="empty-note"><b>Chưa ghi cữ sữa nào</b>Ghi lượng sữa mỗi cữ để biết tổng sữa mỗi ngày.</div>';
+    if(!keys.length)return h+'<div class="empty-note"><b>Chưa có cữ bú nào</b>Bấm Ghi cữ bú để theo dõi lượng sữa hàng ngày của bé.</div>';
     keys.forEach(function(d){
       var tot=days[d].reduce(function(a,f){return a+f.ml;},0);
-      h+='<div class="day"><span>'+fmtDate(d)+(d===isoDate()?" (hôm nay)":"")+'</span><span>'+fmtNum(tot,0)+' ml · '+days[d].length+' cữ</span></div><div class="list">'+days[d].map(function(f){
-        return '<div class="row"><div class="main"><div class="t">'+fmtNum(f.ml,0)+' ml</div><div class="s">'+fmtTime(f.dt)+' · '+esc(f.type)+'</div></div><button class="x" data-act="del" data-c="feeds" data-id="'+f.id+'" aria-label="Xoá cữ sữa">✕</button></div>';}).join("")+'</div>';
-    });
-  }else{
-    arr=sortBy(state.sleeps,"start",true).slice(0,200);
-    h+='<section><button class="btn wide" data-act="addSleep">+ Ghi giấc ngủ</button></section>';
-    arr.forEach(function(s){var d=s.start.slice(0,10);(days[d]=days[d]||[]).push(s);});
-    var k2=Object.keys(days).sort().reverse();
-    if(!k2.length)return h+'<div class="empty-note"><b>Chưa ghi giấc ngủ nào</b>Ghi giờ bé ngủ và thức dậy để biết tổng giờ ngủ mỗi ngày.</div>';
-    k2.forEach(function(d){
-      var tot=days[d].reduce(function(a,s){return a+sleepMin(s);},0);
-      h+='<div class="day"><span>'+fmtDate(d)+(d===isoDate()?" (hôm nay)":"")+'</span><span>'+fmtMin(tot)+' · '+days[d].length+' giấc</span></div><div class="list">'+days[d].map(function(s){
-        return '<div class="row"><div class="main"><div class="t">'+fmtMin(sleepMin(s))+'</div><div class="s">'+fmtTime(s.start)+' đến '+fmtTime(s.end)+(s.start.slice(0,10)!==s.end.slice(0,10)?" ("+fmtShort(s.end)+")":"")+'</div></div><button class="x" data-act="del" data-c="sleeps" data-id="'+s.id+'" aria-label="Xoá giấc ngủ">✕</button></div>';}).join("")+'</div>';
+      h+='<div class="day"><span>'+fmtDate(d)+(d===isoDate()?" (Hôm nay)":"")+'</span><span style="color:var(--pink)">'+fmtNum(tot,0)+' ml · '+days[d].length+' cữ</span></div><div class="list">'+days[d].map(function(f){
+        return '<div class="row"><div class="main"><div class="t">'+fmtNum(f.ml,0)+' ml</div><div class="s">'+fmtTime(f.dt)+' · '+esc(f.type)+'</div></div><button class="x" data-act="del" data-c="feeds" data-id="'+f.id+'">✕</button></div>';}).join("")+'</div>';
     });
   }
+  // TAB 2: MẸ HÚT SỮA
+  else if(ui.care==="pump"){
+    arr=sortBy(state.pumps||[],"dt",true).slice(0,150);
+    h+='<section><button class="btn wide" data-act="addPump" style="background:var(--coral)">+ Ghi cữ hút sữa của mẹ 🌸</button></section>';
+    arr.forEach(function(p){var d=p.dt.slice(0,10);(days[d]=days[d]||[]).push(p);});
+    var keys=Object.keys(days).sort().reverse();
+    if(!keys.length)return h+'<div class="empty-note"><b>Chưa có cữ hút sữa nào</b>Ghi lại lượng sữa hút được để theo dõi nguồn sữa mẹ dồi dào nhé!</div>';
+    keys.forEach(function(d){
+      var tot=days[d].reduce(function(a,p){return a+p.total;},0);
+      h+='<div class="day"><span>'+fmtDate(d)+(d===isoDate()?" (Hôm nay)":"")+'</span><span style="color:var(--coral)">Tổng: '+fmtNum(tot,0)+' ml · '+days[d].length+' cữ hút</span></div><div class="list">'+days[d].map(function(p){
+        var detail = (p.mlL||p.mlR) ? (' (Trái '+p.mlL+'ml | Phải '+p.mlR+'ml)') : '';
+        return '<div class="row"><div class="main"><div class="t">'+fmtNum(p.total,0)+' ml'+detail+'</div><div class="s">'+fmtTime(p.dt)+(p.note?(' · '+esc(p.note)):'')+'</div></div><button class="x" data-act="del" data-c="pumps" data-id="p.id" data-id="'+p.id+'">✕</button></div>';}).join("")+'</div>';
+    });
+  }
+  // TAB 3: THAY TÃ
+  else if(ui.care==="diaper"){
+    arr=sortBy(state.diapers||[],"dt",true).slice(0,150);
+    h+='<section><button class="btn wide" data-act="addDiaper" style="background:var(--mint)">+ Ghi nhận thay tã 🧷</button></section>';
+    arr.forEach(function(d){var dt=d.dt.slice(0,10);(days[dt]=days[dt]||[]).push(d);});
+    var keys=Object.keys(days).sort().reverse();
+    if(!keys.length)return h+'<div class="empty-note"><b>Chưa ghi nhận thay tã</b>Theo dõi số lần tè và ị giúp biết bé có bú đủ hay không.</div>';
+    keys.forEach(function(d){
+      h+='<div class="day"><span>'+fmtDate(d)+(d===isoDate()?" (Hôm nay)":"")+'</span><span style="color:var(--mint)">'+days[d].length+' lần thay tã</span></div><div class="list">'+days[d].map(function(it){
+        var badge = it.type==="wet"?"💧 Tã ướt (tè)":(it.type==="dirty"?"💩 Đi ị":"💧💩 Cả tè & ị");
+        var extra = it.poo ? (' · '+it.poo) : '';
+        return '<div class="row"><div class="main"><div class="t">'+badge+'</div><div class="s">'+fmtTime(it.dt)+extra+(it.note?(' · '+esc(it.note)):'')+'</div></div><button class="x" data-act="del" data-c="diapers" data-id="'+it.id+'">✕</button></div>';}).join("")+'</div>';
+    });
+  }
+  // TAB 4: GIẤC NGỦ
+  else if(ui.care==="sleep"){
+    arr=sortBy(state.sleeps||[],"start",true).slice(0,150);
+    h+='<section><button class="btn wide" data-act="addSleep" style="background:var(--purple)">+ Ghi giấc ngủ của bé 🌙</button></section>';
+    arr.forEach(function(s){var d=s.start.slice(0,10);(days[d]=days[d]||[]).push(s);});
+    var keys=Object.keys(days).sort().reverse();
+    if(!keys.length)return h+'<div class="empty-note"><b>Chưa có giấc ngủ nào</b>Theo dõi tổng giờ ngủ mỗi ngày của bé.</div>';
+    keys.forEach(function(d){
+      var tot=days[d].reduce(function(a,s){return a+sleepMin(s);},0);
+      h+='<div class="day"><span>'+fmtDate(d)+(d===isoDate()?" (Hôm nay)":"")+'</span><span style="color:var(--purple)">'+fmtMin(tot)+' · '+days[d].length+' giấc</span></div><div class="list">'+days[d].map(function(s){
+        return '<div class="row"><div class="main"><div class="t">'+fmtMin(sleepMin(s))+'</div><div class="s">'+fmtTime(s.start)+' đến '+fmtTime(s.end)+(s.start.slice(0,10)!==s.end.slice(0,10)?" ("+fmtShort(s.end)+")":"")+'</div></div><button class="x" data-act="del" data-c="sleeps" data-id="'+s.id+'">✕</button></div>';}).join("")+'</div>';
+    });
+  }
+  // TAB 5: THÂN NHIỆT & THUỐC
+  else if(ui.care==="fever"){
+    arr=sortBy(state.fevers||[],"dt",true).slice(0,100);
+    h+='<section><button class="btn wide danger" data-act="addFever">+ Cặp nhiệt độ / Ghi thuốc 🌡️</button></section>';
+    if(!arr.length)return h+'<div class="empty-note"><b>Bé trộm vía khỏe mạnh!</b>Bấm nút trên để theo dõi thân nhiệt và liều thuốc khi bé bị sốt.</div>';
+    h+='<div class="list">'+arr.map(function(fe){
+      var isHigh = fe.temp >= 38.0;
+      return '<div class="row"><div class="main"><div class="t" style="color:'+(isHigh?'var(--danger)':'var(--ink)')+'">'+fe.temp+'°C <span class="chip t-fever">'+esc(fe.pos)+'</span></div>'+
+        '<div class="s">'+fmtDate(fe.dt)+' lúc '+fmtTime(fe.dt)+(fe.med?('<br>💊 Thuốc: <b>'+esc(fe.med)+'</b>'):'')+(fe.note?('<br>Ghi chú: '+esc(fe.note)):'')+'</div></div>'+
+        '<button class="x" data-act="del" data-c="fevers" data-id="'+fe.id+'">✕</button></div>';
+    }).join("")+'</div>';
+  }
+
   return h;
 }
+
+// VIEW 4: LỊCH HẸN & TIÊM PHÒNG
 var KIND={tiem:["Tiêm phòng","t-tiem"],be:["Khám bé",""],thai:["Khám thai","t-thai"],khac:["Khác","t-khac"]};
 function eventRow(e){
   var k=KIND[e.kind]||KIND.khac,left=dayDiff(e.date,isoDate()),when;
-  if(e.done)when="Đã xong";else if(left<0)when='<span class="late">Quá hạn '+(-left)+' ngày</span>';else if(left===0)when='<b>Hôm nay</b>';else when="Còn "+left+" ngày";
+  if(e.done)when="Đã hoàn thành";else if(left<0)when='<span class="late">Quá hạn '+(-left)+' ngày</span>';else if(left===0)when='<b style="color:var(--pink)">Hôm nay</b>';else when="Còn "+left+" ngày";
   return '<div class="row'+(e.done?" done":"")+'"><button class="check" data-act="toggle" data-id="'+e.id+'" aria-pressed="'+e.done+'" aria-label="Đánh dấu đã xong">✓</button>'+
     '<div class="main"><div class="t">'+esc(e.title)+'</div><div class="s"><span class="chip '+k[1]+'">'+k[0]+'</span>'+fmtDate(e.date)+(e.time?" "+esc(e.time):"")+' · '+when+'</div></div>'+
-    '<button class="x" data-act="del" data-c="events" data-id="'+e.id+'" aria-label="Xoá lịch hẹn">✕</button></div>';
+    '<button class="x" data-act="del" data-c="events" data-id="'+e.id+'">✕</button></div>';
 }
+
 function vPlan(){
-  var h='<section><button class="btn wide" data-act="addEvent">+ Thêm lịch hẹn</button></section>';
-  var up=sortBy(state.events.filter(function(e){return!e.done;}),"date",false),dn=sortBy(state.events.filter(function(e){return e.done;}),"date",true);
-  if(!state.events.length)return h+'<div class="empty-note"><b>Chưa có lịch hẹn</b>Ghi lịch khám thai, khám bé và các mũi tiêm để không bỏ sót.</div>';
-  h+='<section><div class="sec-title">Cần làm</div>'+(up.length?'<div class="list">'+up.map(eventRow).join("")+'</div>':'<div class="empty-note">Không còn lịch nào chờ.</div>')+'</section>';
-  if(dn.length)h+='<section><div class="sec-title">Đã xong</div><div class="list">'+dn.map(eventRow).join("")+'</div></section>';
-  return h+'<p class="hint">Ứng dụng không gửi thông báo. Hãy mở app mỗi ngày để xem mục Cần làm.</p>';
+  var h='<section><button class="btn wide" data-act="addEvent">+ Thêm lịch hẹn / Tiêm phòng 📅</button></section>';
+  var up=sortBy((state.events||[]).filter(function(e){return!e.done;}),"date",false),dn=sortBy((state.events||[]).filter(function(e){return e.done;}),"date",true);
+  if(!state.events||!state.events.length)return h+'<div class="empty-note"><b>Chưa có lịch hẹn nào</b>Ghi lịch tiêm chủng hoặc khám định kỳ để không bỏ lỡ.</div>';
+  h+='<section><div class="sec-title"><span>⏳</span> Cần làm</div>'+(up.length?'<div class="list">'+up.map(eventRow).join("")+'</div>':'<div class="empty-note">Tuyệt vời! Không còn lịch hẹn nào chờ.</div>')+'</section>';
+  if(dn.length)h+='<section><div class="sec-title"><span>✅</span> Đã hoàn thành</div><div class="list">'+dn.map(eventRow).join("")+'</div></section>';
+  return h;
 }
+
+// VIEW 5: NHẬT KÝ
 function vNotes(){
-  var h='<section><button class="btn wide" data-act="addNote">+ Viết nhật ký</button></section>';
-  var arr=sortBy(state.notes,"date",true);
-  if(!arr.length)return h+'<div class="empty-note"><b>Chưa có nhật ký</b>Lưu lại những khoảnh khắc đáng nhớ của bé.</div>';
+  var h='<section><button class="btn wide" data-act="addNote">+ Viết nhật ký mới ✨</button></section>';
+  var arr=sortBy(state.notes||[],"date",true);
+  if(!arr.length)return h+'<div class="empty-note"><b>Chưa có nhật ký</b>Ghi lại những bước đi đầu tiên, nụ cười đầu đời của bé yêu nhé.</div>';
   return h+'<div class="list">'+arr.map(function(n){
-    return '<div class="row" style="align-items:flex-start"><div class="main"><div class="s" style="font-weight:600">'+fmtDate(n.date)+'</div><div class="t" style="font-weight:500;white-space:pre-wrap">'+esc(n.text)+'</div></div><button class="x" data-act="del" data-c="notes" data-id="'+n.id+'" aria-label="Xoá nhật ký">✕</button></div>';
+    return '<div class="row" style="align-items:flex-start"><div class="main"><div class="s" style="font-weight:700;color:var(--pink)">'+fmtDate(n.date)+'</div><div class="t" style="font-weight:600;white-space:pre-wrap;margin-top:4px">'+esc(n.text)+'</div></div><button class="x" data-act="del" data-c="notes" data-id="'+n.id+'">✕</button></div>';
   }).join("")+'</div>';
 }
+
 function render(){
-  $("#hName").textContent=state.baby.name?state.baby.name:"Sổ của bé";
-  $("#hAge").textContent=ageText()+(state.baby.gender?" · "+state.baby.gender:"");
+  $("#hName").textContent=state.baby.name?(state.baby.name+" 👶"):"Sổ của bé 🍼";
+  $("#hAge").textContent=ageText()+(state.baby.gender?(" · "+state.baby.gender):"");
   $("#tabs").innerHTML=TABS.map(function(t){return '<button data-act="tab" data-k="'+t[0]+'"'+(ui.tab===t[0]?' aria-current="page"':"")+'><span aria-hidden="true">'+t[1]+'</span>'+t[2]+'</button>';}).join("");
   var v={home:vHome,growth:vGrowth,care:vCare,plan:vPlan,notes:vNotes}[ui.tab]();
   $("#view").innerHTML=v;
 }
 
-/* events */
+/* Event Delegation */
 document.addEventListener("click",function(e){
   var t=e.target.closest("[data-act]");if(!t)return;
   var a=t.getAttribute("data-act"),k=t.getAttribute("data-k"),id=t.getAttribute("data-id");
@@ -576,18 +829,21 @@ document.addEventListener("click",function(e){
     case "care":ui.care=k;render();break;
     case "addGrowth":fGrowth();break;
     case "addFeed":fFeed();break;
+    case "addPump":fPump();break;
+    case "addDiaper":fDiaper();break;
     case "addSleep":fSleep();break;
+    case "addFever":fFever();break;
     case "addEvent":fEvent();break;
     case "addNote":fNote();break;
     case "settings":fSettings();break;
     case "logout":auth.signOut();closeSheet();break;
     case "close":closeSheet();break;
     case "submit":if(sheetSubmit)sheetSubmit();break;
-    case "wipe":confirmSheet("Xoá toàn bộ dữ liệu bé yêu của tài khoản này?",function(){state=blank();save();closeSheet();render();toast("Đã xoá dữ liệu");});break;
+    case "wipe":confirmSheet("Xoá toàn bộ dữ liệu của tài khoản này?",function(){state=blank();save();closeSheet();render();toast("Đã xoá dữ liệu");});break;
     case "toggle":state.events.forEach(function(ev){if(ev.id===id)ev.done=!ev.done;});save();render();break;
     case "del":
       var c=t.getAttribute("data-c");
-      confirmSheet("Xoá mục này?",function(){state[c]=state[c].filter(function(x){return x.id!==id;});save();closeSheet();render();toast("Đã xoá");});
+      confirmSheet("Xoá mục này?",function(){state[c]=(state[c]||[]).filter(function(x){return x.id!==id;});save();closeSheet();render();toast("Đã xoá");});
       break;
   }
 });
