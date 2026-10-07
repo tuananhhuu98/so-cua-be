@@ -50,6 +50,22 @@
   /* Header & Footer translucent */
   --bar-bg:rgba(248, 250, 252, 0.88);
   --bar-border:#e2e8f0;
+} /* <-- ĐÓNG DẤU NGOẶC CỦA :root Ở ĐÂY */
+
+/* Ẩn thanh cuộn trên toàn bộ trình duyệt (Chrome, Safari, iOS, Firefox) */
+html, body, #app, #sheet .pn, .seg {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE, Edge */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+#app::-webkit-scrollbar,
+#sheet .pn::-webkit-scrollbar,
+.seg::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, iOS Safari */
+  width: 0px;
+  background: transparent;
 }
 
 @media (prefers-color-scheme: dark){
@@ -537,7 +553,12 @@ function fmtDate(s){if(!s)return"";var a=s.slice(0,10).split("-");return a[2]+"/
 function fmtShort(s){var a=s.slice(0,10).split("-");return a[2]+"/"+a[1];}
 function fmtTime(s){return s.slice(11,16);}
 function num(v){v=String(v==null?"":v).trim().replace(",",".");if(v==="")return null;var n=parseFloat(v);return(isFinite(n)&&n>0)?n:NaN;}
-function fmtNum(n,dec){var s=(+n).toFixed(dec);s=s.replace(/\.?0+$/,"");return s.replace(".",",");}
+function fmtNum(n,dec){
+  if(dec === 0) return Math.round(+n).toString();
+  var s = (+n).toFixed(dec);
+  if(s.indexOf(".") !== -1) s = s.replace(/\.?0+$/, "");
+  return s.replace(".", ",");
+}
 function fmtMin(m){m=Math.round(m);var h=Math.floor(m/60),r=m%60;if(h&&r)return h+"g "+r+"p";if(h)return h+"g";return r+"p";}
 function dayDiff(a,b){return Math.round((new Date(a+"T00:00")-new Date(b+"T00:00"))/864e5);}
 function sleepMin(s){return(new Date(s.end)-new Date(s.start))/60000;}
