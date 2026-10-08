@@ -356,6 +356,27 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
 .bar-chart .bar-val{font-size:10px;font-weight:700;color:var(--ink);opacity:0.8}
 .bar-chart .bar-day{font-size:10px;font-weight:600;color:var(--muted)}
 
+/* Chart pills filter & legend */
+.chart-pills{
+  display:inline-flex;align-items:center;gap:3px;
+  background:var(--bg);padding:2px 3px;border-radius:10px;
+  border:1px solid var(--line);
+}
+.chart-pill{
+  font-size:11px;font-weight:700;padding:3px 7px;border-radius:7px;
+  color:var(--muted);background:transparent;border:0;
+  display:inline-flex;align-items:center;gap:4px;
+  cursor:pointer;transition:all 0.15s ease;
+}
+.chart-pill:hover{color:var(--ink)}
+.chart-pill.active{
+  background:var(--paper);color:var(--ink);
+  box-shadow:0 1px 3px rgba(0,0,0,0.08);
+}
+.pill-dot{
+  width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0;
+}
+
 /* Sync status */
 .sync-dot{
   width:8px;height:8px;border-radius:50%;display:inline-block;margin-left:6px;
@@ -468,7 +489,7 @@ function blank(){
 }
 
 var state = blank();
-var ui = {tab:"home", metric:"w", care:"feed"};
+var ui = {tab:"home", metric:"w", care:"feed", feedFilter:"all", feedDay:null};
 
 // ========== Timer state ==========
 var timerInterval = null;
@@ -1143,6 +1164,155 @@ function careBarChart(dataByDay, color, unit){
   return h;
 }
 
+// ========== Milk Types & Feed Bar Chart ==========
+var MILK_CONFIG = {
+  mom:     { key: "mom",     label: "Sữa mẹ",       color: "var(--butter)", icon: "🌸" },
+  formula: { key: "formula", label: "Công thức",     color: "var(--sky)",    icon: "🍼" },
+  direct:  { key: "direct",  label: "Bú trực tiếp", color: "var(--purple)", icon: "🤱" },
+  mix:     { key: "mix",     label: "Mẹ + CT",      color: "var(--mint)",   icon: "🥣" }
+};
+
+function getFeedCategory(type){
+  if(!type) return "mom";
+  var t = type.toLowerCase();
+  if(t.indexOf("công thức") !== -1 && t.indexOf("mẹ") !== -1) return "mix";
+  if(t.indexOf("công thức") !== -1) return "formula";
+  if(t.indexOf("trực tiếp") !== -1) return "direct";
+  if(t.indexOf("mẹ") !== -1) return "mom";
+  return "mom";
+}
+
+function feedBarChart(feeds, filterType, selectedDay){
+  var days = [];
+  for(var i=6; i>=0; i--){
+    var d = new Date(); d.setDate(d.getDate()-i);
+    days.push(isoDate(d));
+  }
+
+  var dayData = {};
+  var tot7 = { mom: 0, formula: 0, direct: 0, mix: 0, all: 0 };
+  var activeCats = {};
+
+  days.forEach(function(d){
+    dayData[d] = { total: 0, byCat: { mom: 0, formula: 0, direct: 0, mix: 0 } };
+  });
+
+  (feeds || []).forEach(function(f){
+    var d = f.dt ? f.dt.slice(0, 10) : "";
+    if(!dayData[d]) return;
+    var ml = f.ml || 0;
+    var cat = getFeedCategory(f.type);
+    dayData[d].byCat[cat] = (dayData[d].byCat[cat] || 0) + ml;
+    if(ml > 0) activeCats[cat] = true;
+    tot7[cat] += ml;
+  });
+
+  var filter = filterType || "all";
+  var vals = days.map(function(d){
+    if(filter === "all"){
+      var sum = 0;
+      Object.keys(dayData[d].byCat).forEach(function(c){ sum += dayData[d].byCat[c]; });
+      dayData[d].total = sum;
+      tot7.all += sum;
+      return sum;
+    } else {
+      var val = dayData[d].byCat[filter] || 0;
+      dayData[d].total = val;
+      return val;
+    }
+  });
+
+  var mx = Math.max.apply(null, vals) || 1;
+
+  var catList = ["mom", "formula"];
+  if(activeCats.direct) catList.push("direct");
+  if(activeCats.mix) catList.push("mix");
+
+  var h = '<div class="card" style="padding:12px 10px 10px;margin-bottom:12px">';
+  
+  // Header: Tiêu đề + Bộ lọc / Chú thích loại sữa
+  h += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px">';
+  h += '<div style="font-size:12px;font-weight:700;color:var(--muted)">📊 7 ngày gần đây</div>';
+
+  h += '<div class="chart-pills" role="tablist">';
+  h += '<button class="chart-pill'+(filter==='all'?' active':'')+'" data-act="feedChartFilter" data-k="all">Tất cả</button>';
+  catList.forEach(function(c){
+    var cfg = MILK_CONFIG[c];
+    var isActive = filter === c;
+    h += '<button class="chart-pill'+(isActive?' active':'')+'" data-act="feedChartFilter" data-k="'+c+'">'+
+      '<span class="pill-dot" style="background:'+cfg.color+'"></span>'+cfg.label+'</button>';
+  });
+  h += '</div></div>';
+
+  // Bar Chart
+  h += '<div class="bar-chart">';
+  days.forEach(function(d, i){
+    var v = vals[i];
+    var pct = Math.round(v / mx * 100);
+    var barH = v > 0 ? Math.max(4, Math.round(pct * 0.7)) : 2;
+    var dayLabel = d.slice(8,10)+'/'+d.slice(5,7);
+    var isToday = d === isoDate();
+    var isSel = selectedDay === d;
+    
+    var segmentsHtml = '';
+    if(v > 0){
+      if(filter === 'all'){
+        catList.forEach(function(c){
+          var cMl = dayData[d].byCat[c] || 0;
+          if(cMl > 0){
+            var segPct = (cMl / v * 100).toFixed(1);
+            var cfg = MILK_CONFIG[c];
+            segmentsHtml += '<div style="height:'+segPct+'%;background:'+cfg.color+';transition:height 0.3s ease" title="'+cfg.label+': '+fmtNum(cMl,0)+' ml"></div>';
+          }
+        });
+      } else {
+        var cfg = MILK_CONFIG[filter];
+        segmentsHtml = '<div style="height:100%;background:'+cfg.color+';transition:height 0.3s ease" title="'+cfg.label+': '+fmtNum(v,0)+' ml"></div>';
+      }
+    }
+
+    h += '<div class="bar-col" data-act="feedChartDay" data-k="'+d+'" style="cursor:pointer" title="Bấm xem '+dayLabel+'">'+
+      '<div class="bar-val">'+(v ? fmtNum(v,0) : "")+'</div>'+
+      '<div class="bar" style="height:'+barH+'px;display:flex;flex-direction:column-reverse;overflow:hidden;border-radius:6px 6px 2px 2px;background:'+(v>0?'var(--bg)':'var(--line)')+';opacity:'+(isToday||isSel?1:0.85)+'">'+
+        segmentsHtml+
+      '</div>'+
+      '<div class="bar-day" style="'+(isToday?'color:var(--primary);font-weight:800;':'')+(isSel?'text-decoration:underline;font-weight:800;':'')+'">'+(isToday?"H.nay":dayLabel)+'</div>'+
+    '</div>';
+  });
+  h += '</div>';
+
+  // Footer: Chi tiết ngày được chọn
+  var targetDay = (selectedDay && dayData[selectedDay]) ? selectedDay : isoDate();
+  var targetData = dayData[targetDay] || { total: 0, byCat: {} };
+  var isTargetToday = targetDay === isoDate();
+  var dayTitle = isTargetToday ? "Hôm nay" : ("Ngày " + targetDay.slice(8,10) + "/" + targetDay.slice(5,7));
+
+  var dayDetails = [];
+  catList.forEach(function(c){
+    var ml = targetData.byCat[c] || 0;
+    if(ml > 0){
+      var cfg = MILK_CONFIG[c];
+      dayDetails.push('<span style="display:inline-flex;align-items:center;gap:3px">'+
+        '<span class="pill-dot" style="background:'+cfg.color+'"></span>'+
+        cfg.label+': <b>'+fmtNum(ml,0)+' ml</b></span>');
+    }
+  });
+
+  h += '<div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">';
+  
+  if(dayDetails.length){
+    h += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span><b>'+dayTitle+'</b>:</span>' + dayDetails.join(" · ") + '</div>';
+  } else {
+    h += '<div><b>'+dayTitle+'</b>: Chưa ghi nhận cữ bú</div>';
+  }
+  
+  var totVal = filter === 'all' ? tot7.all : (tot7[filter] || 0);
+  h += '<div style="font-weight:600">7 ngày: <b style="color:var(--ink)">'+fmtNum(totVal,0)+' ml</b></div>';
+  h += '</div></div>';
+
+  return h;
+}
+
 function rowActions(collection, id, editAct){
   return '<div class="acts"><button class="ed" data-act="'+editAct+'" data-id="'+id+'" title="Sửa">✏️</button><button class="x" data-act="del" data-c="'+collection+'" data-id="'+id+'" title="Xoá">✕</button></div>';
 }
@@ -1190,9 +1360,7 @@ function vCare(){
   if(ui.care==="feed"){
     arr=sortBy(state.feeds||[],"dt",true).slice(0,150);
     // Chart
-    var feedByDay={};
-    (state.feeds||[]).forEach(function(f){var d=f.dt.slice(0,10);feedByDay[d]=(feedByDay[d]||0)+(f.ml||0);});
-    h+=careBarChart(feedByDay,"var(--butter)","ml");
+    h += feedBarChart(state.feeds||[], ui.feedFilter, ui.feedDay);
     
     arr.forEach(function(f){var d=f.dt.slice(0,10);(days[d]=days[d]||[]).push(f);});
     var keys=Object.keys(days).sort().reverse();
@@ -1202,7 +1370,9 @@ function vCare(){
       h+='<div class="day"><span>'+fmtDate(d)+(d===isoDate()?" (Hôm nay)":"")+'</span><span style="color:var(--primary)">'+fmtNum(tot,0)+' ml · '+days[d].length+' cữ</span></div><div class="list">'+days[d].map(function(f){
         var mlText = f.ml ? fmtNum(f.ml,0)+' ml' : '(chưa nhập ml)';
         var durText = f.duration ? ' · '+f.duration+' phút' : '';
-        return '<div class="row"><div class="main"><div class="t">'+mlText+'</div><div class="s">'+fmtTime(f.dt)+' · '+esc(f.type)+durText+(f.note?' · '+esc(f.note):'')+'</div></div>'+rowActions("feeds",f.id,"editFeed")+'</div>';
+        var cat = getFeedCategory(f.type);
+        var cfg = MILK_CONFIG[cat];
+        return '<div class="row"><div class="main"><div class="t">'+mlText+'</div><div class="s">'+fmtTime(f.dt)+' · <span style="display:inline-flex;align-items:center;gap:3px"><span class="pill-dot" style="background:'+cfg.color+'"></span>'+esc(f.type)+'</span>'+durText+(f.note?' · '+esc(f.note):'')+'</div></div>'+rowActions("feeds",f.id,"editFeed")+'</div>';
       }).join("")+'</div>';
     });
   }
@@ -1368,6 +1538,8 @@ document.addEventListener("click",function(e){
     case "tab":ui.tab=k;render();window.scrollTo(0,0);break;
     case "metric":ui.metric=k;render();break;
     case "care":ui.care=k;render();break;
+    case "feedChartFilter":ui.feedFilter=k;render();break;
+    case "feedChartDay":ui.feedDay=(ui.feedDay===k?null:k);render();break;
     case "addGrowth":fGrowth();break;
     case "addFeed":fFeed();break;
     case "addPump":fPump();break;
