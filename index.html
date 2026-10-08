@@ -382,6 +382,39 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
   width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0;
 }
 
+/* Period Pills */
+.period-pills{
+  display:inline-flex;align-items:center;gap:2px;
+  background:var(--bg);padding:2px 3px;border-radius:10px;
+  border:1px solid var(--line);
+}
+.period-pill{
+  font-size:11px;font-weight:700;padding:3px 7px;border-radius:7px;
+  color:var(--muted);background:transparent;border:0;
+  cursor:pointer;transition:all 0.15s ease;
+}
+.period-pill:hover{color:var(--ink)}
+.period-pill.active{
+  background:var(--paper);color:var(--primary);
+  box-shadow:0 1px 3px rgba(0,0,0,0.08);
+}
+
+/* Scrollable Bar Chart for Month */
+.bar-chart.scrollable{
+  overflow-x:auto;overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;
+  padding-bottom:4px;
+}
+.bar-chart.scrollable::-webkit-scrollbar{
+  height:4px;
+}
+.bar-chart.scrollable::-webkit-scrollbar-thumb{
+  background:var(--line);border-radius:4px;
+}
+.bar-chart.scrollable .bar-col{
+  min-width:28px;flex:0 0 28px;
+}
+
 /* Sync status */
 .sync-dot{
   width:8px;height:8px;border-radius:50%;display:inline-block;margin-left:6px;
@@ -495,7 +528,7 @@ function blank(){
 }
 
 var state = blank();
-var ui = {tab:"home", metric:"w", care:"feed", feedFilter:"all", feedDay:null};
+var ui = {tab:"home", metric:"w", care:"feed", feedFilter:"all", carePeriod:"week", careChartKey:null};
 
 // ========== Timer state ==========
 var timerInterval = null;
@@ -1224,29 +1257,192 @@ function chart(key){
   return s;
 }
 
-// ========== Care Bar Chart ==========
-function careBarChart(dataByDay, color, unit){
-  // Lấy 7 ngày gần nhất
-  var days = [];
-  for(var i=6;i>=0;i--){
-    var d = new Date(); d.setDate(d.getDate()-i);
-    days.push(isoDate(d));
+// ========== Care Time Periods ==========
+function getCarePeriods(period){
+  var p = period || "week";
+  var now = new Date();
+  var bins = [];
+
+  if(p === "month"){
+    // 30 ngày gần nhất
+    for(var i = 29; i >= 0; i--){
+      var d = new Date(); d.setDate(d.getDate() - i);
+      var key = isoDate(d);
+      var isToday = i === 0;
+      bins.push({
+        key: key,
+        label: isToday ? "H.nay" : (d.getDate() + "/" + (d.getMonth() + 1)),
+        fullLabel: "Ngày " + d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear(),
+        isCurrent: isToday,
+        matchDate: function(dtStr){ return dtStr && dtStr.slice(0, 10) === this.key; }
+      });
+    }
+  } else if(p === "quarter"){
+    // 12 tuần gần nhất
+    for(var i = 11; i >= 0; i--){
+      var endD = new Date(); endD.setDate(endD.getDate() - (i * 7));
+      var startD = new Date(endD.getTime()); startD.setDate(startD.getDate() - 6);
+      var sStr = isoDate(startD);
+      var eStr = isoDate(endD);
+      var isCurr = i === 0;
+      bins.push({
+        key: sStr + "_" + eStr,
+        startStr: sStr,
+        endStr: eStr,
+        label: isCurr ? "T.này" : (startD.getDate() + "/" + (startD.getMonth() + 1)),
+        fullLabel: "Tuần " + startD.getDate() + "/" + (startD.getMonth() + 1) + " - " + endD.getDate() + "/" + (endD.getMonth() + 1),
+        isCurrent: isCurr,
+        matchDate: function(dtStr){
+          if(!dtStr) return false;
+          var d = dtStr.slice(0, 10);
+          return d >= this.startStr && d <= this.endStr;
+        }
+      });
+    }
+  } else if(p === "year"){
+    // 12 tháng gần nhất
+    for(var i = 11; i >= 0; i--){
+      var d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      var y = d.getFullYear();
+      var m = d.getMonth() + 1;
+      var key = y + "-" + (m < 10 ? "0" + m : m);
+      var isCurr = i === 0;
+      bins.push({
+        key: key,
+        label: "T" + m,
+        fullLabel: "Tháng " + m + "/" + y,
+        isCurrent: isCurr,
+        matchDate: function(dtStr){ return dtStr && dtStr.slice(0, 7) === this.key; }
+      });
+    }
+  } else {
+    // Mặc định: Tuần (7 ngày gần nhất)
+    for(var i = 6; i >= 0; i--){
+      var d = new Date(); d.setDate(d.getDate() - i);
+      var key = isoDate(d);
+      var isToday = i === 0;
+      bins.push({
+        key: key,
+        label: isToday ? "H.nay" : (d.getDate() + "/" + (d.getMonth() + 1)),
+        fullLabel: "Ngày " + d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear(),
+        isCurrent: isToday,
+        matchDate: function(dtStr){ return dtStr && dtStr.slice(0, 10) === this.key; }
+      });
+    }
   }
-  var vals = days.map(function(d){ return dataByDay[d]||0; });
-  var mx = Math.max.apply(null, vals) || 1;
+
+  return bins;
+}
+
+function renderPeriodPills(currentPeriod){
+  var cp = currentPeriod || "week";
+  return '<div class="period-pills" role="tablist">' +
+    '<button class="period-pill'+(cp==="week"?" active":"")+'" data-act="carePeriod" data-k="week">Tuần</button>' +
+    '<button class="period-pill'+(cp==="month"?" active":"")+'" data-act="carePeriod" data-k="month">Tháng</button>' +
+    '<button class="period-pill'+(cp==="quarter"?" active":"")+'" data-act="carePeriod" data-k="quarter">Quý</button>' +
+    '<button class="period-pill'+(cp==="year"?" active":"")+'" data-act="carePeriod" data-k="year">Năm</button>' +
+  '</div>';
+}
+
+// ========== Care Bar Chart (General) ==========
+function careBarChart(items, dateFn, valFn, color, unit, title, aggType, selectedKey, period){
+  var p = period || (ui.carePeriod || "week");
+  var bins = getCarePeriods(p);
+  var agg = aggType || "sum";
   
-  var h = '<div class="card" style="padding:12px 10px 8px;margin-bottom:12px"><div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px">📊 7 ngày gần đây</div><div class="bar-chart">';
-  days.forEach(function(d,i){
-    var v = vals[i];
-    var pct = Math.round(v/mx*100);
-    var barH = Math.max(2, pct * 0.7);
-    var dayLabel = d.slice(8,10)+'/'+d.slice(5,7);
-    var isToday = d === isoDate();
-    h+='<div class="bar-col"><div class="bar-val">'+(v?fmtNum(v,0):"")+'</div>'+
-       '<div class="bar" style="height:'+barH+'px;background:'+color+';opacity:'+(isToday?1:0.6)+'"></div>'+
-       '<div class="bar-day" style="'+(isToday?'color:var(--primary);font-weight:800':'')+'">'+(isToday?"H.nay":dayLabel)+'</div></div>';
+  var binData = {};
+  bins.forEach(function(b){ binData[b.key] = { val: 0, count: 0, bin: b }; });
+
+  (items || []).forEach(function(it){
+    var dt = dateFn ? dateFn(it) : it.dt;
+    if(!dt) return;
+    var v = valFn ? valFn(it) : 0;
+    for(var i = 0; i < bins.length; i++){
+      if(bins[i].matchDate(dt)){
+        var k = bins[i].key;
+        if(agg === "max"){
+          if(!binData[k].count || v > binData[k].val) binData[k].val = v;
+        } else {
+          binData[k].val += (v || 0);
+        }
+        binData[k].count++;
+        break;
+      }
+    }
   });
-  h+='</div></div>';
+
+  var vals = bins.map(function(b){ return binData[b.key].val; });
+  var mx = Math.max.apply(null, vals) || 1;
+  var isScrollable = p === "month";
+
+  var periodTitles = { week: "Tuần (7 ngày)", month: "Tháng (30 ngày)", quarter: "Quý (12 tuần)", year: "Năm (12 tháng)" };
+  var h = '<div class="card" style="padding:12px 10px 10px;margin-bottom:12px">';
+  
+  // Header: Tiêu đề + Period Selector Pills
+  h += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px">';
+  h += '<div style="font-size:12px;font-weight:700;color:var(--muted)">📊 ' + (title ? (title + " · " + periodTitles[p]) : periodTitles[p]) + '</div>';
+  h += renderPeriodPills(p);
+  h += '</div>';
+
+  // Bar Chart
+  h += '<div class="bar-chart' + (isScrollable ? ' scrollable' : '') + '">';
+  bins.forEach(function(b, i){
+    var v = vals[i];
+    var pct = Math.round(v / mx * 100);
+    var barH = v > 0 ? Math.max(4, Math.round(pct * 0.7)) : 2;
+    var isSel = selectedKey === b.key;
+
+    var valText = "";
+    if(v > 0){
+      if(unit === "°C") valText = v.toFixed(1);
+      else if(unit === "phút") valText = (v >= 60 ? (v / 60).toFixed(1) + 'g' : v + 'p');
+      else if(v >= 10000) valText = Math.round(v/1000) + 'k';
+      else valText = fmtNum(v, 0);
+    }
+
+    h += '<div class="bar-col" data-act="careChartDay" data-k="'+b.key+'" style="cursor:pointer" title="Bấm xem '+b.fullLabel+'">'+
+      '<div class="bar-val">'+valText+'</div>'+
+      '<div class="bar" style="height:'+barH+'px;background:'+color+';opacity:'+(b.isCurrent||isSel?1:0.75)+'"></div>'+
+      '<div class="bar-day" style="'+(b.isCurrent?'color:var(--primary);font-weight:800;':'')+(isSel?'text-decoration:underline;font-weight:800;':'')+'">'+b.label+'</div>'+
+    '</div>';
+  });
+  h += '</div>';
+
+  // Footer: Chi tiết bin được chọn
+  var selBin = bins.find(function(b){ return b.key === selectedKey; }) || bins[bins.length - 1];
+  var selVal = (selBin && binData[selBin.key]) ? binData[selBin.key].val : 0;
+  var selCount = (selBin && binData[selBin.key]) ? binData[selBin.key].count : 0;
+
+  var totVal = 0;
+  if(agg === "max"){
+    totVal = Math.max.apply(null, vals.filter(function(x){ return x > 0; })) || 0;
+  } else {
+    totVal = vals.reduce(function(a, b){ return a + b; }, 0);
+  }
+
+  var avgUnit = p === "week" || p === "month" ? "/ngày" : (p === "quarter" ? "/tuần" : "/tháng");
+  var avgVal = agg === "max" ? totVal : Math.round(totVal / (bins.length || 1));
+
+  h += '<div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">';
+  
+  if(selVal > 0){
+    var dispVal = unit === "°C" ? (selVal.toFixed(1) + ' °C') : (unit === "phút" ? fmtMin(selVal) : (fmtNum(selVal, 0) + ' ' + unit));
+    var countText = (agg !== "max" && selCount > 1) ? ' (' + selCount + ' lần)' : '';
+    h += '<div><b>' + (selBin ? selBin.fullLabel : "Hôm nay") + '</b>: <b style="color:var(--ink)">' + dispVal + '</b>' + countText + '</div>';
+  } else {
+    h += '<div><b>' + (selBin ? selBin.fullLabel : "Hôm nay") + '</b>: Chưa có ghi nhận</div>';
+  }
+
+  if(agg === "max"){
+    h += '<div style="font-weight:600">Cao nhất: <b style="color:var(--danger)">' + (totVal ? totVal.toFixed(1) + ' °C' : '--') + '</b></div>';
+  } else {
+    var totValText = unit === "phút" ? fmtMin(totVal) : (fmtNum(totVal, 0) + ' ' + unit);
+    var avgValText = unit === "phút" ? fmtMin(avgVal) : (fmtNum(avgVal, 0) + ' ' + unit);
+    h += '<div style="font-weight:600">Tổng: <b style="color:var(--ink)">' + totValText + '</b> (TB: ' + avgValText + avgUnit + ')</div>';
+  }
+
+  h += '</div></div>';
+
   return h;
 }
 
@@ -1268,43 +1464,41 @@ function getFeedCategory(type){
   return "mom";
 }
 
-function feedBarChart(feeds, filterType, selectedDay){
-  var days = [];
-  for(var i=6; i>=0; i--){
-    var d = new Date(); d.setDate(d.getDate()-i);
-    days.push(isoDate(d));
-  }
-
+function feedBarChart(feeds, filterType, selectedKey, period){
+  var p = period || (ui.carePeriod || "week");
+  var bins = getCarePeriods(p);
+  
   var dayData = {};
-  var tot7 = { mom: 0, formula: 0, direct: 0, mix: 0, all: 0 };
+  var totAll = { mom: 0, formula: 0, direct: 0, mix: 0, total: 0 };
   var activeCats = {};
 
-  days.forEach(function(d){
-    dayData[d] = { total: 0, byCat: { mom: 0, formula: 0, direct: 0, mix: 0 } };
+  bins.forEach(function(b){
+    dayData[b.key] = { total: 0, byCat: { mom: 0, formula: 0, direct: 0, mix: 0 }, bin: b };
   });
 
   (feeds || []).forEach(function(f){
-    var d = f.dt ? f.dt.slice(0, 10) : "";
-    if(!dayData[d]) return;
+    if(!f.dt) return;
     var ml = f.ml || 0;
     var cat = getFeedCategory(f.type);
-    dayData[d].byCat[cat] = (dayData[d].byCat[cat] || 0) + ml;
-    if(ml > 0) activeCats[cat] = true;
-    tot7[cat] += ml;
+    for(var i = 0; i < bins.length; i++){
+      if(bins[i].matchDate(f.dt)){
+        var k = bins[i].key;
+        dayData[k].byCat[cat] = (dayData[k].byCat[cat] || 0) + ml;
+        dayData[k].total += ml;
+        if(ml > 0) activeCats[cat] = true;
+        totAll[cat] += ml;
+        totAll.total += ml;
+        break;
+      }
+    }
   });
 
   var filter = filterType || "all";
-  var vals = days.map(function(d){
+  var vals = bins.map(function(b){
     if(filter === "all"){
-      var sum = 0;
-      Object.keys(dayData[d].byCat).forEach(function(c){ sum += dayData[d].byCat[c]; });
-      dayData[d].total = sum;
-      tot7.all += sum;
-      return sum;
+      return dayData[b.key].total;
     } else {
-      var val = dayData[d].byCat[filter] || 0;
-      dayData[d].total = val;
-      return val;
+      return dayData[b.key].byCat[filter] || 0;
     }
   });
 
@@ -1314,12 +1508,18 @@ function feedBarChart(feeds, filterType, selectedDay){
   if(activeCats.direct) catList.push("direct");
   if(activeCats.mix) catList.push("mix");
 
+  var isScrollable = p === "month";
   var h = '<div class="card" style="padding:12px 10px 10px;margin-bottom:12px">';
   
-  // Header: Tiêu đề + Bộ lọc / Chú thích loại sữa
+  // Header: Tiêu đề + Period Selector Pills
+  var periodTitles = { week: "Tuần (7 ngày)", month: "Tháng (30 ngày)", quarter: "Quý (12 tuần)", year: "Năm (12 tháng)" };
   h += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px">';
-  h += '<div style="font-size:12px;font-weight:700;color:var(--muted)">📊 7 ngày gần đây</div>';
+  h += '<div style="font-size:12px;font-weight:700;color:var(--muted)">📊 Bé bú · ' + (periodTitles[p] || "Tuần") + '</div>';
+  h += renderPeriodPills(p);
+  h += '</div>';
 
+  // Filter Pills (Tất cả, Sữa mẹ, Công thức)
+  h += '<div style="display:flex;justify-content:flex-end;margin-bottom:6px">';
   h += '<div class="chart-pills" role="tablist">';
   h += '<button class="chart-pill'+(filter==='all'?' active':'')+'" data-act="feedChartFilter" data-k="all">Tất cả</button>';
   catList.forEach(function(c){
@@ -1331,20 +1531,18 @@ function feedBarChart(feeds, filterType, selectedDay){
   h += '</div></div>';
 
   // Bar Chart
-  h += '<div class="bar-chart">';
-  days.forEach(function(d, i){
+  h += '<div class="bar-chart' + (isScrollable ? ' scrollable' : '') + '">';
+  bins.forEach(function(b, i){
     var v = vals[i];
     var pct = Math.round(v / mx * 100);
     var barH = v > 0 ? Math.max(4, Math.round(pct * 0.7)) : 2;
-    var dayLabel = d.slice(8,10)+'/'+d.slice(5,7);
-    var isToday = d === isoDate();
-    var isSel = selectedDay === d;
+    var isSel = selectedKey === b.key;
     
     var segmentsHtml = '';
     if(v > 0){
       if(filter === 'all'){
         catList.forEach(function(c){
-          var cMl = dayData[d].byCat[c] || 0;
+          var cMl = dayData[b.key].byCat[c] || 0;
           if(cMl > 0){
             var segPct = (cMl / v * 100).toFixed(1);
             var cfg = MILK_CONFIG[c];
@@ -1357,25 +1555,24 @@ function feedBarChart(feeds, filterType, selectedDay){
       }
     }
 
-    h += '<div class="bar-col" data-act="feedChartDay" data-k="'+d+'" style="cursor:pointer" title="Bấm xem '+dayLabel+'">'+
-      '<div class="bar-val">'+(v ? fmtNum(v,0) : "")+'</div>'+
-      '<div class="bar" style="height:'+barH+'px;display:flex;flex-direction:column-reverse;overflow:hidden;border-radius:6px 6px 2px 2px;background:'+(v>0?'var(--bg)':'var(--line)')+';opacity:'+(isToday||isSel?1:0.85)+'">'+
+    var valText = v > 0 ? (v >= 10000 ? Math.round(v/1000)+'k' : fmtNum(v, 0)) : "";
+    h += '<div class="bar-col" data-act="careChartDay" data-k="'+b.key+'" style="cursor:pointer" title="Bấm xem '+b.fullLabel+'">'+
+      '<div class="bar-val">'+valText+'</div>'+
+      '<div class="bar" style="height:'+barH+'px;display:flex;flex-direction:column-reverse;overflow:hidden;border-radius:6px 6px 2px 2px;background:'+(v>0?'var(--bg)':'var(--line)')+';opacity:'+(b.isCurrent||isSel?1:0.85)+'">'+
         segmentsHtml+
       '</div>'+
-      '<div class="bar-day" style="'+(isToday?'color:var(--primary);font-weight:800;':'')+(isSel?'text-decoration:underline;font-weight:800;':'')+'">'+(isToday?"H.nay":dayLabel)+'</div>'+
+      '<div class="bar-day" style="'+(b.isCurrent?'color:var(--primary);font-weight:800;':'')+(isSel?'text-decoration:underline;font-weight:800;':'')+'">'+b.label+'</div>'+
     '</div>';
   });
   h += '</div>';
 
-  // Footer: Chi tiết ngày được chọn
-  var targetDay = (selectedDay && dayData[selectedDay]) ? selectedDay : isoDate();
-  var targetData = dayData[targetDay] || { total: 0, byCat: {} };
-  var isTargetToday = targetDay === isoDate();
-  var dayTitle = isTargetToday ? "Hôm nay" : ("Ngày " + targetDay.slice(8,10) + "/" + targetDay.slice(5,7));
+  // Footer: Chi tiết bin được chọn
+  var selBin = bins.find(function(b){ return b.key === selectedKey; }) || bins[bins.length - 1];
+  var selData = (selBin && dayData[selBin.key]) ? dayData[selBin.key] : { total: 0, byCat: {} };
 
   var dayDetails = [];
   catList.forEach(function(c){
-    var ml = targetData.byCat[c] || 0;
+    var ml = selData.byCat[c] || 0;
     if(ml > 0){
       var cfg = MILK_CONFIG[c];
       dayDetails.push('<span style="display:inline-flex;align-items:center;gap:3px">'+
@@ -1387,13 +1584,16 @@ function feedBarChart(feeds, filterType, selectedDay){
   h += '<div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">';
   
   if(dayDetails.length){
-    h += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span><b>'+dayTitle+'</b>:</span>' + dayDetails.join(" · ") + '</div>';
+    h += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span><b>'+(selBin ? selBin.fullLabel : "Hôm nay")+'</b>:</span>' + dayDetails.join(" · ") + '</div>';
   } else {
-    h += '<div><b>'+dayTitle+'</b>: Chưa ghi nhận cữ bú</div>';
+    h += '<div><b>'+(selBin ? selBin.fullLabel : "Hôm nay")+'</b>: Chưa ghi nhận cữ bú</div>';
   }
   
-  var totVal = filter === 'all' ? tot7.all : (tot7[filter] || 0);
-  h += '<div style="font-weight:600">7 ngày: <b style="color:var(--ink)">'+fmtNum(totVal,0)+' ml</b></div>';
+  var totVal = filter === 'all' ? totAll.total : (totAll[filter] || 0);
+  var avgUnit = p === "week" || p === "month" ? "/ngày" : (p === "quarter" ? "/tuần" : "/tháng");
+  var avgVal = Math.round(totVal / (bins.length || 1));
+
+  h += '<div style="font-weight:600">Tổng: <b style="color:var(--ink)">'+fmtNum(totVal,0)+' ml</b> (TB: '+fmtNum(avgVal,0)+' ml'+avgUnit+')</div>';
   h += '</div></div>';
 
   return h;
@@ -1446,7 +1646,7 @@ function vCare(){
   if(ui.care==="feed"){
     arr=sortBy(state.feeds||[],"dt",true).slice(0,150);
     // Chart
-    h += feedBarChart(state.feeds||[], ui.feedFilter, ui.feedDay);
+    h += feedBarChart(state.feeds||[], ui.feedFilter, ui.careChartKey, ui.carePeriod);
     
     arr.forEach(function(f){var d=f.dt.slice(0,10);(days[d]=days[d]||[]).push(f);});
     var keys=Object.keys(days).sort().reverse();
@@ -1464,9 +1664,7 @@ function vCare(){
   }
   else if(ui.care==="pump"){
     arr=sortBy(state.pumps||[],"dt",true).slice(0,150);
-    var pumpByDay={};
-    (state.pumps||[]).forEach(function(p){var d=p.dt.slice(0,10);pumpByDay[d]=(pumpByDay[d]||0)+p.total;});
-    h+=careBarChart(pumpByDay,"var(--coral)","ml");
+    h+=careBarChart(state.pumps||[], function(p){return p.dt;}, function(p){return p.total;}, "var(--coral)", "ml", "Hút sữa", "sum", ui.careChartKey, ui.carePeriod);
 
     arr.forEach(function(p){var d=p.dt.slice(0,10);(days[d]=days[d]||[]).push(p);});
     var keys=Object.keys(days).sort().reverse();
@@ -1481,9 +1679,7 @@ function vCare(){
   }
   else if(ui.care==="diaper"){
     arr=sortBy(state.diapers||[],"dt",true).slice(0,150);
-    var diapByDay={};
-    (state.diapers||[]).forEach(function(d){var dt=d.dt.slice(0,10);diapByDay[dt]=(diapByDay[dt]||0)+1;});
-    h+=careBarChart(diapByDay,"var(--mint)","lần");
+    h+=careBarChart(state.diapers||[], function(d){return d.dt;}, function(d){return 1;}, "var(--mint)", "lần", "Thay tã", "sum", ui.careChartKey, ui.carePeriod);
 
     arr.forEach(function(d){var dt=d.dt.slice(0,10);(days[dt]=days[dt]||[]).push(d);});
     var keys=Object.keys(days).sort().reverse();
@@ -1498,9 +1694,7 @@ function vCare(){
   }
   else if(ui.care==="sleep"){
     arr=sortBy(state.sleeps||[],"start",true).slice(0,150);
-    var sleepByDay={};
-    (state.sleeps||[]).forEach(function(s){var d=s.start.slice(0,10);sleepByDay[d]=(sleepByDay[d]||0)+Math.round(sleepMin(s));});
-    h+=careBarChart(sleepByDay,"var(--purple)","phút");
+    h+=careBarChart(state.sleeps||[], function(s){return s.start;}, function(s){return Math.round(sleepMin(s));}, "var(--purple)", "phút", "Giấc ngủ", "sum", ui.careChartKey, ui.carePeriod);
 
     arr.forEach(function(s){var d=s.start.slice(0,10);(days[d]=days[d]||[]).push(s);});
     var keys=Object.keys(days).sort().reverse();
@@ -1514,12 +1708,8 @@ function vCare(){
   }
   else if(ui.care==="fever"){
     arr=sortBy(state.fevers||[],"dt",true).slice(0,100);
-    // Fever chart - temperature line
-    var feverByDay={};
-    (state.fevers||[]).forEach(function(f){var d=f.dt.slice(0,10);if(!feverByDay[d]||f.temp>feverByDay[d])feverByDay[d]=f.temp;});
-    if(Object.keys(feverByDay).length>=1){
-      // Hiển thị nhiệt độ cao nhất mỗi ngày trong 7 ngày gần nhất
-      h+=careBarChart(feverByDay,"var(--danger)","°C");
+    if((state.fevers||[]).length >= 1){
+      h+=careBarChart(state.fevers||[], function(f){return f.dt;}, function(f){return f.temp;}, "var(--danger)", "°C", "Thân nhiệt cao nhất", "max", ui.careChartKey, ui.carePeriod);
     }
 
     if(!arr.length) h+='<div class="empty-note"><b>Bé trộm vía khỏe mạnh!</b>Bấm nút + để theo dõi thân nhiệt và liều thuốc khi bé bị sốt.</div>';
@@ -1532,12 +1722,10 @@ function vCare(){
   }
   else if(ui.care==="water"){
     arr=sortBy(state.waters||[],"dt",true).slice(0,150);
-    var waterByDay={};
-    (state.waters||[]).forEach(function(w){var d=w.dt.slice(0,10);waterByDay[d]=(waterByDay[d]||0)+(w.ml||0);});
-    h+=careBarChart(waterByDay,"var(--sky)","ml");
+    h+=careBarChart(state.waters||[], function(w){return w.dt;}, function(w){return w.ml;}, "var(--sky)", "ml", "Nước mẹ uống", "sum", ui.careChartKey, ui.carePeriod);
 
     // Mục tiêu nước uống
-    var todayWater = waterByDay[isoDate()]||0;
+    var todayWater = (state.waters||[]).filter(function(w){return w.dt&&w.dt.slice(0,10)===isoDate();}).reduce(function(a,w){return a+(w.ml||0);},0);
     var target = 2000;
     var pct = Math.min(100, Math.round(todayWater/target*100));
     h+='<div class="card" style="margin-bottom:12px;padding:12px 14px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:13px;font-weight:700">💧 Hôm nay: '+fmtNum(todayWater,0)+' / '+target+' ml</span><span style="font-size:12px;font-weight:700;color:var(--sky)">'+pct+'%</span></div>'+
@@ -1585,6 +1773,13 @@ function render(){
   var v={home:vHome,growth:vGrowth,care:vCare,plan:vPlan}[ui.tab]();
   $("#view").innerHTML=v;
   
+  // Auto-scroll biểu đồ tháng sang bên phải (ngày gần nhất)
+  setTimeout(function(){
+    document.querySelectorAll(".bar-chart.scrollable").forEach(function(el){
+      el.scrollLeft = el.scrollWidth;
+    });
+  }, 30);
+
   // FAB - chỉ hiển thị ở tab care khi có tính năng chăm sóc được bật
   var fabC = document.getElementById("fab-container");
   var hasCare = feat("feeds")||feat("pumps")||feat("diapers")||feat("sleeps")||feat("fevers")||feat("waters");
@@ -1625,9 +1820,12 @@ document.addEventListener("click",function(e){
   switch(a){
     case "tab":ui.tab=k;render();window.scrollTo(0,0);break;
     case "metric":ui.metric=k;render();break;
-    case "care":ui.care=k;render();break;
+    case "care":ui.care=k;ui.careChartKey=null;render();break;
+    case "carePeriod":ui.carePeriod=k;ui.careChartKey=null;render();break;
+    case "careChartDay":
+    case "feedChartDay":
+      ui.careChartKey=(ui.careChartKey===k?null:k);render();break;
     case "feedChartFilter":ui.feedFilter=k;render();break;
-    case "feedChartDay":ui.feedDay=(ui.feedDay===k?null:k);render();break;
     case "addGrowth":fGrowth();break;
     case "addFeed":fFeed();break;
     case "addPump":fPump();break;
