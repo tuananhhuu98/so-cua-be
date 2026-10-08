@@ -312,12 +312,14 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
 .toggle-row{
   display:flex;align-items:center;justify-content:space-between;
   padding:11px 0;border-bottom:1px solid var(--line);
+  cursor:pointer;user-select:none;
 }
 .toggle-row:last-child{border-bottom:0}
 .toggle-row .tl{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
 .toggle-sw{
   position:relative;width:48px;height:28px;border-radius:99px;
   background:var(--line);transition:background 0.2s;flex-shrink:0;
+  cursor:pointer;border:none;outline:none;
 }
 .toggle-sw::after{
   content:'';position:absolute;left:3px;top:3px;width:22px;height:22px;
@@ -989,8 +991,8 @@ function fSettings(){
   var photoUrl = (currentUser && currentUser.photoURL) ? currentUser.photoURL : "";
   
   function togRow(key, icon, label){
-    return '<div class="toggle-row"><div class="tl">'+icon+' '+label+'</div>'+
-      '<button class="toggle-sw" data-toggle="'+key+'" aria-checked="'+(s[key]!==false)+'" role="switch"></button></div>';
+    return '<div class="toggle-row" data-toggle="'+key+'"><div class="tl">'+icon+' '+label+'</div>'+
+      '<button type="button" class="toggle-sw" data-toggle="'+key+'" aria-checked="'+(s[key]!==false)+'" role="switch" aria-label="'+label+'"></button></div>';
   }
 
   openSheet("Hồ sơ & Cài đặt",
@@ -1019,8 +1021,10 @@ function fSettings(){
    "Lưu hồ sơ",function(){
     var v=vals();state.baby={name:v.name.trim(),dob:v.dob,gender:v.gender};
     // Lưu settings từ toggles
-    document.querySelectorAll("#pn [data-toggle]").forEach(function(el){
-      state.settings[el.getAttribute("data-toggle")] = el.getAttribute("aria-checked") === "true";
+    if(!state.settings) state.settings = defaultSettings();
+    document.querySelectorAll("#pn .toggle-sw[data-toggle]").forEach(function(el){
+      var k = el.getAttribute("data-toggle");
+      if(k) state.settings[k] = el.getAttribute("aria-checked") === "true";
     });
     save();closeSheet();render();toast("Đã cập nhật hồ sơ");
   });
@@ -1144,6 +1148,9 @@ function rowActions(collection, id, editAct){
 }
 
 function vGrowth(){
+  if(!feat("growth")){
+    return '<div class="empty-note"><b>Tính năng Chỉ số phát triển đang tắt</b>Vào ⚙️ Cài đặt để bật lại tính năng này khi cần theo dõi cân nặng, chiều cao.</div>';
+  }
   var m=METRICS[ui.metric];
   var h='<div class="seg" role="group">'+["w","h","hc"].map(function(k){return '<button data-act="metric" data-k="'+k+'" aria-pressed="'+(ui.metric===k)+'">'+METRICS[k].label+'</button>';}).join("")+'</div>';
   h+='<section class="card" style="padding:12px 10px 8px">'+chart(ui.metric)+'</section>';
@@ -1320,9 +1327,10 @@ function render(){
   var v={home:vHome,growth:vGrowth,care:vCare,plan:vPlan}[ui.tab]();
   $("#view").innerHTML=v;
   
-  // FAB - chỉ hiển thị ở tab care
+  // FAB - chỉ hiển thị ở tab care khi có tính năng chăm sóc được bật
   var fabC = document.getElementById("fab-container");
-  if(ui.tab==="care"){
+  var hasCare = feat("feeds")||feat("pumps")||feat("diapers")||feat("sleeps")||feat("fevers")||feat("waters");
+  if(ui.tab==="care" && hasCare){
     var fabActs = {feed:"addFeed",pump:"addPump",diaper:"addDiaper",sleep:"addSleep",fever:"addFever",water:"addWater"};
     var fabIcons = {feed:"🍼",pump:"🌸",diaper:"🧷",sleep:"🌙",fever:"🌡️",water:"💧"};
     var act = fabActs[ui.care]||"addFeed";
@@ -1334,15 +1342,27 @@ function render(){
 
 // ========== EVENT HANDLING ==========
 document.addEventListener("click",function(e){
-  var t=e.target.closest("[data-act]");if(!t)return;
-  var a=t.getAttribute("data-act"),k=t.getAttribute("data-k"),id=t.getAttribute("data-id");
-  
-  // Toggle switch handling
-  if(t.classList.contains("toggle-sw")){
-    var cur = t.getAttribute("aria-checked") === "true";
-    t.setAttribute("aria-checked", !cur);
+  // Toggle switch handling (click on switch or anywhere on row)
+  var sw = e.target.closest(".toggle-sw");
+  if(!sw && e.target.closest(".toggle-row")){
+    sw = e.target.closest(".toggle-row").querySelector(".toggle-sw");
+  }
+  if(sw){
+    var cur = sw.getAttribute("aria-checked") === "true";
+    var next = !cur;
+    sw.setAttribute("aria-checked", next ? "true" : "false");
+    var featKey = sw.getAttribute("data-toggle");
+    if(featKey){
+      if(!state.settings) state.settings = defaultSettings();
+      state.settings[featKey] = next;
+      save();
+      render();
+    }
     return;
   }
+
+  var t=e.target.closest("[data-act]");if(!t)return;
+  var a=t.getAttribute("data-act"),k=t.getAttribute("data-k"),id=t.getAttribute("data-id");
   
   switch(a){
     case "tab":ui.tab=k;render();window.scrollTo(0,0);break;
@@ -1358,7 +1378,7 @@ document.addEventListener("click",function(e){
     case "addWater":fWater();break;
     case "settings":fSettings();break;
     case "logout":auth.signOut();closeSheet();break;
-    case "close":closeSheet();break;
+    case "close":closeSheet();render();break;
     case "submit":if(sheetSubmit)sheetSubmit();break;
     case "wipe":confirmSheet("Xoá toàn bộ dữ liệu của tài khoản này?",function(){state=blank();save();closeSheet();render();toast("Đã xoá dữ liệu");});break;
     case "toggle":state.events.forEach(function(ev){if(ev.id===id)ev.done=!ev.done;});save();render();break;
@@ -1381,7 +1401,7 @@ document.addEventListener("click",function(e){
       break;
   }
 });
-document.addEventListener("keydown",function(e){if(e.key==="Escape")closeSheet();});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeSheet();render();}});
 })();
 </script>
 </body>
