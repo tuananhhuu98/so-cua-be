@@ -106,6 +106,11 @@ button:active{transform:scale(0.97);opacity:0.9}
 }
 .top h1{margin:0;font-size:19px;font-weight:800;letter-spacing:-0.02em;line-height:1.2}
 .top p{margin:0;color:var(--primary);font-size:13px;font-weight:600}
+#hAge{
+  cursor:pointer;user-select:none;display:inline-flex;align-items:center;gap:3px;
+  transition:opacity 0.15s ease, transform 0.1s ease;
+}
+#hAge:active{transform:scale(0.97);opacity:0.75}
 .top .who{flex:1;min-width:0}
 .icon-btn{
   width:40px;height:40px;border-radius:14px;
@@ -425,7 +430,7 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
 <!-- GIAO DIỆN CHÍNH -->
 <div id="app">
   <header class="top">
-    <div class="who"><h1 id="hName">Sổ của bé</h1><p id="hAge"></p></div>
+    <div class="who"><h1 id="hName">Sổ của bé</h1><p id="hAge" data-act="toggleAgeFormat" title="Chạm để đổi kiểu hiển thị tuổi"></p></div>
     <button class="icon-btn" data-act="settings" aria-label="Hồ sơ và tài khoản">⚙️</button>
   </header>
   <main id="view"></main>
@@ -475,7 +480,8 @@ var syncStatus = "online"; // online, offline, error
 function defaultSettings(){
   return {
     feeds:true, pumps:true, diapers:true, sleeps:true, fevers:true,
-    waters:true, growth:true, photos:false
+    waters:true, growth:true, photos:false,
+    ageFormat:"month_day"
   };
 }
 
@@ -750,15 +756,88 @@ function evaluateMetric(metricKey, val, dateStr) {
   return { text: "Dưới chuẩn (" + diffFmt + ")", status: "low" };
 }
 
+function getBabyAge(dobStr){
+  if(!dobStr) return null;
+  var b = new Date(dobStr + "T00:00");
+  var n = new Date(); n.setHours(0,0,0,0);
+  if(isNaN(b.getTime())) return null;
+  if(b > n){
+    return { isFuture: true, diffDays: Math.round((b - n) / 864e5), dob: dobStr };
+  }
+
+  var totalDays = Math.round((n - b) / 864e5);
+  var totalWeeks = Math.floor(totalDays / 7);
+  var remWeekDays = totalDays % 7;
+
+  // Tính số tháng và ngày lẻ chính xác theo lịch
+  var temp = new Date(b.getTime());
+  var months = 0;
+  while(true){
+    var next = new Date(temp.getTime());
+    next.setMonth(next.getMonth() + 1);
+    if(next <= n){
+      temp = next;
+      months++;
+    } else {
+      break;
+    }
+  }
+  var remDays = Math.round((n - temp) / 864e5);
+  var years = Math.floor(months / 12);
+  var remMonths = months % 12;
+
+  return {
+    isFuture: false,
+    totalDays: totalDays,
+    totalWeeks: totalWeeks,
+    remWeekDays: remWeekDays,
+    months: months,
+    remDays: remDays,
+    years: years,
+    remMonths: remMonths
+  };
+}
+
 function ageText(){
-  var dob=state.baby.dob;if(!dob)return"Nhập ngày sinh để xem tuổi bé";
-  var b=new Date(dob+"T00:00"),n=new Date();n.setHours(0,0,0,0);
-  if(b>n)return"Dự sinh "+fmtDate(dob);
-  var m=(n.getFullYear()-b.getFullYear())*12+n.getMonth()-b.getMonth();if(n.getDate()<b.getDate())m--;
-  var days=Math.round((n-b)/864e5);
-  if(m<1){return days<7?days+" ngày tuổi":Math.floor(days/7)+" tuần "+(days%7?days%7+" ngày":"")+" tuổi";}
-  if(m<24)return m+" tháng tuổi";
-  return Math.floor(m/12)+" tuổi "+(m%12?m%12+" tháng":"");
+  var dob = state.baby.dob;
+  if(!dob) return "Nhập ngày sinh để xem tuổi bé";
+  var age = getBabyAge(dob);
+  if(!age) return "Nhập ngày sinh để xem tuổi bé";
+  if(age.isFuture) return "Dự sinh " + fmtDate(age.dob);
+
+  var d = age.totalDays;
+  if(d === 0) return "Hôm nay bé chào đời 🎉";
+  if(d < 7) return d + " ngày tuổi";
+
+  var fmt = (state.settings && state.settings.ageFormat) || "month_day";
+
+  if(fmt === "week_day"){
+    return age.totalWeeks + " tuần" + (age.remWeekDays ? " " + age.remWeekDays + " ngày" : "") + " tuổi";
+  }
+
+  if(fmt === "combo"){
+    var wText = age.totalWeeks + " tuần" + (age.remWeekDays ? " " + age.remWeekDays + " ngày" : "");
+    if(age.months < 1){
+      return wText + " tuổi (" + age.totalDays + " ngày)";
+    }
+    var mPart = age.years >= 1
+      ? (age.years + " tuổi" + (age.remMonths ? " " + age.remMonths + " tháng" : "") + (age.remDays ? " " + age.remDays + " ngày" : ""))
+      : (age.months + " tháng" + (age.remDays ? " " + age.remDays + " ngày" : "") + " tuổi");
+    return mPart + " · " + wText;
+  }
+
+  if(fmt === "days"){
+    return age.totalDays + " ngày tuổi";
+  }
+
+  // Mặc định: month_day (Tháng & Ngày)
+  if(age.months < 1){
+    return age.totalWeeks + " tuần" + (age.remWeekDays ? " " + age.remWeekDays + " ngày" : "") + " tuổi";
+  }
+  if(age.years < 1){
+    return age.months + " tháng" + (age.remDays ? " " + age.remDays + " ngày" : "") + " tuổi";
+  }
+  return age.years + " tuổi" + (age.remMonths ? " " + age.remMonths + " tháng" : "") + (age.remDays ? " " + age.remDays + " ngày" : "");
 }
 
 var METRICS={w:{label:"Cân nặng",unit:"kg",dec:2},h:{label:"Chiều cao",unit:"cm",dec:1},hc:{label:"Vòng đầu",unit:"cm",dec:1}};
@@ -1026,6 +1105,12 @@ function fSettings(){
    '<div class="f"><label for="b_n">Tên bé</label><input id="b_n" name="name" value="'+esc(b.name)+'" placeholder="vd: Bống, Cún..."></div>'+
    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="f"><label for="b_d">Ngày sinh</label><input id="b_d" name="dob" type="date" value="'+esc(b.dob)+'"></div>'+
    '<div class="f"><label for="b_g">Giới tính</label><select id="b_g" name="gender"><option value="">Chưa chọn</option><option value="Bé trai"'+(b.gender==="Bé trai"?" selected":"")+'>👦 Bé trai</option><option value="Bé gái"'+(b.gender==="Bé gái"?" selected":"")+'>👧 Bé gái</option></select></div></div>'+
+   '<div class="f"><label for="b_af">Định dạng tuổi hiển thị</label><select id="b_af" name="ageFormat">'+
+     '<option value="month_day"'+(s.ageFormat!=="week_day"&&s.ageFormat!=="combo"&&s.ageFormat!=="days"?" selected":"")+'>📅 Tháng & Ngày (vd: 1 tháng 13 ngày)</option>'+
+     '<option value="week_day"'+(s.ageFormat==="week_day"?" selected":"")+'>🗓️ Tuần & Ngày (vd: 6 tuần 2 ngày)</option>'+
+     '<option value="combo"'+(s.ageFormat==="combo"?" selected":"")+'>🐣 Tổng hợp (vd: 1 tháng 13 ngày · 6 tuần 2 ngày)</option>'+
+     '<option value="days"'+(s.ageFormat==="days"?" selected":"")+'>🔢 Tổng số ngày (vd: 44 ngày tuổi)</option>'+
+   '</select></div>'+
    '<hr>'+
    '<div style="font-size:13px;font-weight:800;margin-bottom:8px;color:var(--ink)">🔧 Bật / Tắt tính năng</div>'+
    '<div style="background:var(--bg);border-radius:14px;padding:4px 14px;border:1px solid var(--line)">'+
@@ -1043,6 +1128,7 @@ function fSettings(){
     var v=vals();state.baby={name:v.name.trim(),dob:v.dob,gender:v.gender};
     // Lưu settings từ toggles
     if(!state.settings) state.settings = defaultSettings();
+    state.settings.ageFormat = v.ageFormat || "month_day";
     document.querySelectorAll("#pn .toggle-sw[data-toggle]").forEach(function(el){
       var k = el.getAttribute("data-toggle");
       if(k) state.settings[k] = el.getAttribute("aria-checked") === "true";
@@ -1492,7 +1578,9 @@ function vPlan(){
 // ========== RENDER ==========
 function render(){
   $("#hName").textContent=state.baby.name?(state.baby.name):"Sổ của bé";
-  $("#hAge").textContent=ageText()+(state.baby.gender?(" · "+state.baby.gender):"");
+  var genderText = state.baby.gender ? (" · " + state.baby.gender) : "";
+  var showIcon = state.baby.dob ? ' <span style="font-size:10px;opacity:0.65;margin-left:2px" title="Chạm để đổi kiểu hiển thị">🔄</span>' : '';
+  $("#hAge").innerHTML = esc(ageText()) + esc(genderText) + showIcon;
   $("#tabs").innerHTML=TABS.map(function(t){return '<button data-act="tab" data-k="'+t[0]+'"'+(ui.tab===t[0]?' aria-current="page"':"")+"><span aria-hidden=\"true\">"+t[1]+"</span>"+t[2]+"</button>";}).join("");
   var v={home:vHome,growth:vGrowth,care:vCare,plan:vPlan}[ui.tab]();
   $("#view").innerHTML=v;
@@ -1549,6 +1637,23 @@ document.addEventListener("click",function(e){
     case "addEvent":fEvent();break;
     case "addWater":fWater();break;
     case "settings":fSettings();break;
+    case "toggleAgeFormat":
+      if(!state.baby.dob){ fSettings(); break; }
+      if(!state.settings) state.settings = defaultSettings();
+      var formats = ["month_day", "week_day", "combo", "days"];
+      var names = {
+        month_day: "Tháng & Ngày",
+        week_day: "Tuần & Ngày",
+        combo: "Tổng hợp (Tháng & Tuần)",
+        days: "Tổng số ngày"
+      };
+      var curIdx = formats.indexOf(state.settings.ageFormat || "month_day");
+      var nextFmt = formats[(curIdx + 1) % formats.length];
+      state.settings.ageFormat = nextFmt;
+      save();
+      render();
+      toast("Đã đổi: " + names[nextFmt]);
+      break;
     case "logout":auth.signOut();closeSheet();break;
     case "close":closeSheet();render();break;
     case "submit":if(sheetSubmit)sheetSubmit();break;
