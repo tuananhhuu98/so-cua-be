@@ -25,7 +25,6 @@
   --muted:#64748b;
   --line:#e2e8f0;
   
-  /* Bảng màu Xanh Dương - Tươi sáng, sạch sẽ, không dùng hồng */
   --primary:#2563eb;
   --primary-hover:#1d4ed8;
   --primary-soft:#eff6ff;
@@ -40,6 +39,8 @@
   --coral:#f97316;
   --coral-soft:#fff7ed;
   --danger:#ef4444;
+  --sky:#0ea5e9;
+  --sky-soft:#f0f9ff;
   
   --radius-lg:22px;
   --radius-md:16px;
@@ -47,76 +48,43 @@
   --shadow:0 4px 16px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -2px rgba(15, 23, 42, 0.04);
   --shadow-sm:0 2px 8px -2px rgba(15, 23, 42, 0.06);
 
-  /* Header & Footer translucent */
   --bar-bg:rgba(248, 250, 252, 0.88);
   --bar-border:#e2e8f0;
-} /* <-- ĐÓNG DẤU NGOẶC CỦA :root Ở ĐÂY */
+}
 
-/* Ẩn thanh cuộn trên toàn bộ trình duyệt (Chrome, Safari, iOS, Firefox) */
+/* Ẩn thanh cuộn */
 html, body, #app, #sheet .pn, .seg {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+html::-webkit-scrollbar, body::-webkit-scrollbar, #app::-webkit-scrollbar,
+#sheet .pn::-webkit-scrollbar, .seg::-webkit-scrollbar {
+  display: none; width: 0px; background: transparent;
 }
 
-html::-webkit-scrollbar,
-body::-webkit-scrollbar,
-#app::-webkit-scrollbar,
-#sheet .pn::-webkit-scrollbar,
-.seg::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, iOS Safari */
-  width: 0px;
-  background: transparent;
-}
-
-/* Màu đánh giá chuẩn WHO */
-.who-tag.normal { color: var(--mint) !important; font-weight: 700; }  /* Đạt chuẩn */
-.who-tag.high   { color: var(--primary) !important; font-weight: 700; } /* Vượt chuẩn */
-.who-tag.low    { color: var(--butter) !important; font-weight: 700; }  /* Dưới chuẩn */
+.who-tag.normal { color: var(--mint) !important; font-weight: 700; }
+.who-tag.high   { color: var(--primary) !important; font-weight: 700; }
+.who-tag.low    { color: var(--butter) !important; font-weight: 700; }
 
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#0f172a;
-    --paper:#1e293b;
-    --ink:#f8fafc;
-    --muted:#94a3b8;
-    --line:#334155;
-    
-    --primary:#3b82f6;
-    --primary-hover:#60a5fa;
-    --primary-soft:#1e3a5f;
-    --primary-border:#1d4ed8;
-    
-    --butter:#fbbf24;
-    --butter-soft:#2d2410;
-    --mint:#34d399;
-    --mint-soft:#132e27;
-    --purple:#a78bfa;
-    --purple-soft:#28203c;
-    --coral:#fb923c;
-    --coral-soft:#332216;
-    --danger:#f87171;
-    
-    --bar-bg:rgba(15, 23, 42, 0.88);
-    --bar-border:#334155;
-    --shadow:0 6px 18px rgba(0, 0, 0, 0.3);
-    --shadow-sm:0 2px 8px rgba(0, 0, 0, 0.2);
+    --bg:#0f172a;--paper:#1e293b;--ink:#f8fafc;--muted:#94a3b8;--line:#334155;
+    --primary:#3b82f6;--primary-hover:#60a5fa;--primary-soft:#1e3a5f;--primary-border:#1d4ed8;
+    --butter:#fbbf24;--butter-soft:#2d2410;--mint:#34d399;--mint-soft:#132e27;
+    --purple:#a78bfa;--purple-soft:#28203c;--coral:#fb923c;--coral-soft:#332216;
+    --danger:#f87171;--sky:#38bdf8;--sky-soft:#0c2d48;
+    --bar-bg:rgba(15, 23, 42, 0.88);--bar-border:#334155;
+    --shadow:0 6px 18px rgba(0, 0, 0, 0.3);--shadow-sm:0 2px 8px rgba(0, 0, 0, 0.2);
   }
 }
 
-html{
-  -webkit-text-size-adjust:100%;
-  -webkit-tap-highlight-color:transparent;
-}
+html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
 *,*::before,*::after{box-sizing:border-box}
 
 body{
-  margin:0;
-  background:var(--bg);
-  color:var(--ink);
+  margin:0;background:var(--bg);color:var(--ink);
   font-family:"Plus Jakarta Sans","Be Vietnam Pro",-apple-system,sans-serif;
-  font-size:15px;
-  line-height:1.5;
-  min-height:100vh;
+  font-size:15px;line-height:1.5;min-height:100vh;
 }
 
 button,input,select,textarea{font:inherit;color:inherit}
@@ -125,27 +93,16 @@ button:active{transform:scale(0.97);opacity:0.9}
 :focus-visible{outline:2.5px solid var(--primary);outline-offset:2px;border-radius:10px}
 
 #app{
-  width:100%;
-  max-width:520px;
-  margin:0 auto;
-  min-height:100vh;
-  padding-bottom:calc(76px + env(safe-area-inset-bottom, 12px));
-  position:relative;
+  width:100%;max-width:520px;margin:0 auto;min-height:100vh;
+  padding-bottom:calc(76px + env(safe-area-inset-bottom, 12px));position:relative;
 }
 
-/* TOP HEADER - Đồng bộ mờ theo theme */
 .top{
-  position:sticky;
-  top:0;
-  z-index:10;
-  background:var(--bar-bg);
-  backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);
+  position:sticky;top:0;z-index:10;background:var(--bar-bg);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
   border-bottom:1px solid var(--bar-border);
   padding:calc(10px + env(safe-area-inset-top, 0px)) 16px 10px;
-  display:flex;
-  align-items:center;
-  gap:12px;
+  display:flex;align-items:center;gap:12px;
 }
 .top h1{margin:0;font-size:19px;font-weight:800;letter-spacing:-0.02em;line-height:1.2}
 .top p{margin:0;color:var(--primary);font-size:13px;font-weight:600}
@@ -153,21 +110,15 @@ button:active{transform:scale(0.97);opacity:0.9}
 .icon-btn{
   width:40px;height:40px;border-radius:14px;
   background:var(--paper);box-shadow:var(--shadow-sm);
-  display:grid;place-items:center;font-size:18px;
-  border:1px solid var(--line);
+  display:grid;place-items:center;font-size:18px;border:1px solid var(--line);
 }
 
 main{padding:12px 14px}
 section{margin-bottom:16px}
 .sec-title{font-size:15px;font-weight:800;margin:0 2px 8px;color:var(--ink);display:flex;align-items:center;gap:6px}
 
-/* Cards */
-.card{
-  background:var(--paper);border-radius:var(--radius-lg);
-  padding:16px;box-shadow:var(--shadow);border:1px solid var(--line);
-}
+.card{background:var(--paper);border-radius:var(--radius-lg);padding:16px;box-shadow:var(--shadow);border:1px solid var(--line)}
 
-/* Growth Strip */
 .strip{
   display:grid;grid-template-columns:repeat(3,1fr);
   background:var(--paper);border-radius:var(--radius-lg);
@@ -183,25 +134,22 @@ section{margin-bottom:16px}
 .strip .w .v{color:var(--primary)}
 .strip>div.empty .v{color:var(--line)}
 
-/* Stats Grid */
 .grid-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.mini{
-  border-radius:var(--radius-md);padding:14px;
-  box-shadow:var(--shadow-sm);border:1px solid transparent;
-}
+.mini{border-radius:var(--radius-md);padding:14px;box-shadow:var(--shadow-sm);border:1px solid transparent}
 .mini.milk{background:var(--butter-soft);border-color:rgba(245,158,11,0.25)}
 .mini.sleep{background:var(--purple-soft);border-color:rgba(139,92,246,0.25)}
 .mini.pump{background:var(--coral-soft);border-color:rgba(249,115,22,0.25)}
 .mini.diaper{background:var(--mint-soft);border-color:rgba(16,185,129,0.25)}
+.mini.water{background:var(--sky-soft);border-color:rgba(14,165,233,0.25)}
 .mini .k{font-size:12px;color:var(--ink);font-weight:700;opacity:0.85}
 .mini .v{font-size:21px;font-weight:800;margin-top:3px}
 .mini.milk .v{color:var(--butter)}
 .mini.sleep .v{color:var(--purple)}
 .mini.pump .v{color:var(--coral)}
 .mini.diaper .v{color:var(--mint)}
+.mini.water .v{color:var(--sky)}
 .mini .v small{font-size:12px;font-weight:600;opacity:0.85}
 
-/* Quick Actions */
 .quick{display:grid;grid-template-columns:repeat(3, 1fr);gap:8px}
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:6px;
@@ -215,13 +163,11 @@ section{margin-bottom:16px}
 .btn.danger{background:rgba(239,68,68,0.1);color:var(--danger);box-shadow:none;border:1px solid rgba(239,68,68,0.25)}
 .btn.small{min-height:38px;padding:0 14px;font-size:13px;border-radius:12px}
 .btn.plain{background:transparent;color:var(--primary);min-height:38px;box-shadow:none}
-
 .btn-google{
   background:var(--paper);color:var(--ink);border:1px solid var(--line);
   box-shadow:var(--shadow-sm);font-weight:700;font-size:14.5px;
 }
 
-/* Segments */
 .seg{
   display:flex;background:var(--paper);border:1px solid var(--line);
   border-radius:14px;padding:4px;gap:4px;margin-bottom:12px;overflow-x:auto;
@@ -234,7 +180,6 @@ section{margin-bottom:16px}
   background:var(--primary);color:#ffffff;box-shadow:0 2px 6px rgba(37,99,235,0.25);
 }
 
-/* Chart */
 .chart{width:100%;height:auto;display:block}
 .chart text{font-family:inherit;fill:var(--muted);font-size:10px;font-weight:600}
 .chart .gl{stroke:var(--line);stroke-width:1;stroke-dasharray:3 3}
@@ -242,7 +187,6 @@ section{margin-bottom:16px}
 .chart .dot{fill:var(--paper);stroke:var(--primary);stroke-width:2.5}
 .chart .val{fill:var(--primary);font-weight:700;font-size:11px}
 
-/* List items */
 .list{display:flex;flex-direction:column;gap:8px}
 .row{
   display:flex;align-items:center;gap:12px;background:var(--paper);
@@ -252,8 +196,10 @@ section{margin-bottom:16px}
 .row .main{flex:1;min-width:0}
 .row .t{font-weight:700;font-size:14.5px;overflow-wrap:anywhere}
 .row .s{font-size:12.5px;color:var(--muted);font-weight:500;margin-top:2px;overflow-wrap:anywhere}
-.row .x{width:32px;height:32px;border-radius:10px;color:var(--muted);font-size:15px;display:grid;place-items:center}
+.row .acts{display:flex;gap:2px;flex-shrink:0}
+.row .x,.row .ed{width:32px;height:32px;border-radius:10px;color:var(--muted);font-size:15px;display:grid;place-items:center}
 .row .x:active{background:rgba(239,68,68,0.1);color:var(--danger)}
+.row .ed:active{background:var(--primary-soft);color:var(--primary)}
 .day{font-size:13px;font-weight:700;color:var(--muted);margin:14px 4px 6px;display:flex;justify-content:space-between}
 
 .chip{
@@ -280,18 +226,13 @@ section{margin-bottom:16px}
 }
 .empty-note b{display:block;color:var(--ink);font-size:15px;margin-bottom:2px;font-weight:700}
 
-/* TABS FOOTER - Khử màu trắng, đồng bộ mờ theo theme */
 .tabs{
   position:fixed;left:0;right:0;bottom:0;z-index:10;
-  background:var(--bar-bg);
-  backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);
+  background:var(--bar-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
   border-top:1px solid var(--bar-border);
   padding:4px 6px calc(4px + env(safe-area-inset-bottom, 12px));
 }
-.tabs div{
-  max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:2px;
-}
+.tabs div{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
 .tabs button{
   display:flex;flex-direction:column;align-items:center;gap:2px;
   padding:6px 0 4px;font-size:10.5px;font-weight:700;color:var(--muted);border-radius:12px;
@@ -355,6 +296,72 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
 }
 .divider::before,.divider::after{content:'';flex:1;border-bottom:1px solid var(--line)}
 .divider span{padding:0 8px}
+
+/* FAB - Floating Add Button */
+.fab{
+  position:fixed;bottom:calc(76px + env(safe-area-inset-bottom, 12px));right:max(16px, calc((100vw - 520px)/2 + 16px));
+  z-index:9;width:56px;height:56px;border-radius:50%;
+  background:var(--primary);color:#fff;font-size:28px;font-weight:300;
+  display:grid;place-items:center;
+  box-shadow:0 6px 20px rgba(37,99,235,0.4);
+  transition:transform 0.15s ease, background 0.15s ease;
+}
+.fab:active{transform:scale(0.92)!important;background:var(--primary-hover)}
+
+/* Toggle Switch */
+.toggle-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:11px 0;border-bottom:1px solid var(--line);
+}
+.toggle-row:last-child{border-bottom:0}
+.toggle-row .tl{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
+.toggle-sw{
+  position:relative;width:48px;height:28px;border-radius:99px;
+  background:var(--line);transition:background 0.2s;flex-shrink:0;
+}
+.toggle-sw::after{
+  content:'';position:absolute;left:3px;top:3px;width:22px;height:22px;
+  border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.2);
+  transition:transform 0.2s;
+}
+.toggle-sw[aria-checked="true"]{background:var(--primary)}
+.toggle-sw[aria-checked="true"]::after{transform:translateX(20px)}
+
+/* Timer */
+#timer-bar{
+  position:fixed;top:0;left:0;right:0;z-index:25;
+  background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;
+  padding:calc(8px + env(safe-area-inset-top, 0px)) 16px 8px;
+  display:none;align-items:center;gap:12px;
+  box-shadow:0 4px 16px rgba(37,99,235,0.3);
+}
+#timer-bar.active{display:flex}
+#timer-bar .timer-clock{font-size:28px;font-weight:800;font-variant-numeric:tabular-nums;flex:1;text-align:center}
+#timer-bar .timer-label{font-size:12px;font-weight:600;opacity:0.85}
+#timer-bar button{
+  min-height:36px;padding:0 16px;border-radius:10px;font-weight:700;font-size:13px;color:#fff;
+  background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);
+}
+#timer-bar button:active{background:rgba(255,255,255,0.35)}
+
+/* Bar Chart for Care */
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:100px;padding:12px 4px 0}
+.bar-chart .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.bar-chart .bar{
+  width:100%;border-radius:6px 6px 2px 2px;min-height:2px;
+  transition:height 0.3s ease;position:relative;
+}
+.bar-chart .bar-val{font-size:10px;font-weight:700;color:var(--ink);opacity:0.8}
+.bar-chart .bar-day{font-size:10px;font-weight:600;color:var(--muted)}
+
+/* Sync status */
+.sync-dot{
+  width:8px;height:8px;border-radius:50%;display:inline-block;margin-left:6px;
+  vertical-align:middle;
+}
+.sync-dot.online{background:var(--mint)}
+.sync-dot.offline{background:var(--butter)}
+.sync-dot.error{background:var(--danger)}
 </style>
 </head>
 <body>
@@ -401,6 +408,17 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
   <main id="view"></main>
 </div>
 
+<!-- Timer bar -->
+<div id="timer-bar">
+  <div>
+    <div class="timer-label">⏱️ Đang bấm giờ bé ăn</div>
+    <div class="timer-clock" id="timer-display">00:00</div>
+  </div>
+  <button data-act="timerStop">✅ Xong</button>
+  <button data-act="timerCancel">✕</button>
+</div>
+
+<div id="fab-container"></div>
 <nav class="tabs" aria-label="Điều hướng"><div id="tabs"></div></nav>
 <div id="sheet" role="dialog" aria-modal="true"><div class="bd" data-act="close"></div><div class="pn" id="pn"></div></div>
 <div id="toast" role="status"></div>
@@ -409,7 +427,7 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
 (function(){
 "use strict";
 
-const firebaseConfig = {
+var firebaseConfig = {
   apiKey: "AIzaSyDnP8y0JHN_R2r7pJFc_Ef9TJBGWMwqBUc",
   authDomain: "so-cua-be-app.firebaseapp.com",
   projectId: "so-cua-be-app",
@@ -420,44 +438,84 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+var auth = firebase.auth();
+var db = firebase.firestore();
 
-let currentUser = null;
-let userDocRef = null;
-let unsubscribeSnapshot = null;
+// Bật Firestore persistence (offline)
+db.enablePersistence({synchronizeTabs:true}).catch(function(){});
+
+var currentUser = null;
+var userDocRef = null;
+var unsubscribeSnapshot = null;
+var syncStatus = "online"; // online, offline, error
+
+function defaultSettings(){
+  return {
+    feeds:true, pumps:true, diapers:true, sleeps:true, fevers:true,
+    waters:true, growth:true, photos:false
+  };
+}
 
 function blank(){
   return {
     baby:{name:"",dob:"",gender:""},
-    growth:[],
-    feeds:[],
-    pumps:[],
-    sleeps:[],
-    diapers:[],
-    fevers:[],
-    events:[],
-    notes:[]
+    settings: defaultSettings(),
+    growth:[], feeds:[], pumps:[], sleeps:[], diapers:[],
+    fevers:[], events:[], waters:[]
   };
 }
 
 var state = blank();
 var ui = {tab:"home", metric:"w", care:"feed"};
 
-// Auth handling
-let isSignUpMode = false;
-const authView = document.getElementById("auth-view");
-const aEmail = document.getElementById("a_email");
-const aPass = document.getElementById("a_pass");
-const aErr = document.getElementById("a_err");
-const aSubmit = document.getElementById("a_btn_submit");
-const aSwitch = document.getElementById("a_btn_switch");
-const aTitle = document.getElementById("auth-title");
-const aDesc = document.getElementById("auth-desc");
-const btnGoogle = document.getElementById("btn-google-login");
+// ========== Timer state ==========
+var timerInterval = null;
+var timerStart = null;
+var timerFeedDt = null;
+
+function startTimer(){
+  timerStart = Date.now();
+  timerFeedDt = isoDT();
+  document.getElementById("timer-bar").classList.add("active");
+  updateTimerDisplay();
+  timerInterval = setInterval(updateTimerDisplay, 1000);
+}
+
+function updateTimerDisplay(){
+  if(!timerStart) return;
+  var elapsed = Math.floor((Date.now() - timerStart) / 1000);
+  var m = Math.floor(elapsed / 60);
+  var s = elapsed % 60;
+  document.getElementById("timer-display").textContent = p2(m) + ":" + p2(s);
+}
+
+function stopTimer(cancelled){
+  clearInterval(timerInterval);
+  timerInterval = null;
+  document.getElementById("timer-bar").classList.remove("active");
+  if(!cancelled && timerStart){
+    var elapsed = Math.round((Date.now() - timerStart) / 60000);
+    // Mở form ghi cữ bú với thời gian đã bấm
+    fFeed(timerFeedDt, elapsed);
+  }
+  timerStart = null;
+  timerFeedDt = null;
+}
+
+// ========== Auth ==========
+var isSignUpMode = false;
+var authView = document.getElementById("auth-view");
+var aEmail = document.getElementById("a_email");
+var aPass = document.getElementById("a_pass");
+var aErr = document.getElementById("a_err");
+var aSubmit = document.getElementById("a_btn_submit");
+var aSwitch = document.getElementById("a_btn_switch");
+var aTitle = document.getElementById("auth-title");
+var aDesc = document.getElementById("auth-desc");
+var btnGoogle = document.getElementById("btn-google-login");
 
 btnGoogle.onclick = function(){
-  const provider = new firebase.auth.GoogleAuthProvider();
+  var provider = new firebase.auth.GoogleAuthProvider();
   aErr.textContent = "";
   auth.signInWithPopup(provider).catch(function(err){
     if(err.code === "auth/popup-blocked" || err.code === "auth/popup-closed-by-user"){
@@ -478,15 +536,15 @@ aSwitch.onclick = function(){
 };
 
 aSubmit.onclick = function(){
-  const email = aEmail.value.trim();
-  const pass = aPass.value.trim();
+  var email = aEmail.value.trim();
+  var pass = aPass.value.trim();
   if(!email || !pass){ aErr.textContent = "Vui lòng nhập đủ email và mật khẩu."; return; }
   
   aSubmit.disabled = true;
   aSubmit.textContent = "Đang xử lý...";
   aErr.textContent = "";
 
-  const action = isSignUpMode 
+  var action = isSignUpMode 
     ? auth.createUserWithEmailAndPassword(email, pass)
     : auth.signInWithEmailAndPassword(email, pass);
 
@@ -511,22 +569,40 @@ auth.onAuthStateChanged(function(user){
     authView.classList.remove("active");
     userDocRef = db.collection("users").doc(user.uid);
     
+    // Load từ localStorage trước (Local-first)
     try {
       var local = localStorage.getItem("baby_cache_" + user.uid);
-      if(local) state = Object.assign(blank(), JSON.parse(local));
+      if(local){
+        state = Object.assign(blank(), JSON.parse(local));
+        if(!state.settings) state.settings = defaultSettings();
+        if(!state.waters) state.waters = [];
+      }
     } catch(e){}
     render();
 
+    // Sync pending changes lên Firebase
+    syncPending();
+
     if(unsubscribeSnapshot) unsubscribeSnapshot();
     unsubscribeSnapshot = userDocRef.onSnapshot(function(doc){
+      syncStatus = "online";
       if(doc.exists){
-        state = Object.assign(blank(), doc.data());
-        try { localStorage.setItem("baby_cache_" + user.uid, JSON.stringify(state)); } catch(e){}
+        var serverData = doc.data();
+        // Merge: nếu server mới hơn thì lấy server
+        var localPending = getPendingTs();
+        var serverTs = serverData._lastSync || 0;
+        if(!localPending || serverTs >= localPending){
+          state = Object.assign(blank(), serverData);
+          if(!state.settings) state.settings = defaultSettings();
+          if(!state.waters) state.waters = [];
+          try { localStorage.setItem("baby_cache_" + user.uid, JSON.stringify(state)); } catch(e){}
+        }
         render();
       }
     }, function(err){
       console.error(err);
-      toast("Lỗi tải dữ liệu");
+      syncStatus = "offline";
+      toast("📴 Đang offline - Dữ liệu lưu tại máy");
     });
   } else {
     currentUser = null;
@@ -539,15 +615,59 @@ auth.onAuthStateChanged(function(user){
   }
 });
 
-function save(){
-  if(!currentUser || !userDocRef) return;
-  try { localStorage.setItem("baby_cache_" + currentUser.uid, JSON.stringify(state)); } catch(e){}
-  userDocRef.set(state, { merge: true }).catch(function(err){
-    console.error(err);
-    toast("Chưa thể lưu lên mạng");
-  });
+// ========== Local-first Save ==========
+function getPendingTs(){
+  try{
+    return parseInt(localStorage.getItem("baby_pending_ts_" + (currentUser?currentUser.uid:"")))||0;
+  }catch(e){return 0;}
 }
 
+function save(){
+  if(!currentUser) return;
+  state._lastSync = Date.now();
+  // Luôn lưu local trước
+  try {
+    localStorage.setItem("baby_cache_" + currentUser.uid, JSON.stringify(state));
+    localStorage.setItem("baby_pending_ts_" + currentUser.uid, String(state._lastSync));
+  } catch(e){}
+  // Rồi thử lưu Firebase
+  if(userDocRef){
+    userDocRef.set(state, { merge: true }).then(function(){
+      syncStatus = "online";
+      try { localStorage.removeItem("baby_pending_ts_" + currentUser.uid); } catch(e){}
+    }).catch(function(err){
+      console.error(err);
+      syncStatus = "offline";
+      toast("📴 Đã lưu tại máy, sẽ đồng bộ khi có mạng");
+    });
+  }
+}
+
+function syncPending(){
+  if(!currentUser || !userDocRef) return;
+  var pending = getPendingTs();
+  if(pending){
+    try{
+      var local = localStorage.getItem("baby_cache_" + currentUser.uid);
+      if(local){
+        userDocRef.set(JSON.parse(local), {merge:true}).then(function(){
+          syncStatus = "online";
+          try { localStorage.removeItem("baby_pending_ts_" + currentUser.uid); } catch(e){}
+        }).catch(function(){
+          syncStatus = "offline";
+        });
+      }
+    }catch(e){}
+  }
+}
+
+// Khi online lại thì sync
+window.addEventListener("online", function(){
+  syncPending();
+  toast("🟢 Đã có mạng - Đang đồng bộ...");
+});
+
+// ========== Utilities ==========
 function $(s){return document.querySelector(s);}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
@@ -567,60 +687,46 @@ function fmtNum(n,dec){
 function fmtMin(m){m=Math.round(m);var h=Math.floor(m/60),r=m%60;if(h&&r)return h+"g "+r+"p";if(h)return h+"g";return r+"p";}
 function dayDiff(a,b){return Math.round((new Date(a+"T00:00")-new Date(b+"T00:00"))/864e5);}
 function sleepMin(s){return(new Date(s.end)-new Date(s.start))/60000;}
-// Bảng chuẩn trung bình WHO (Tháng tuổi 0 -> 24)
-// w: [Bé trai kg, Bé gái kg], h: [Bé trai cm, Bé gái cm]
+function toast(t){var el=$("#toast");el.textContent=t;el.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){el.classList.remove("on");},2400);}
+function sortBy(arr,key,desc){return (arr||[]).slice().sort(function(a,b){return(a[key]<b[key]?-1:a[key]>b[key]?1:0)*(desc?-1:1);});}
+
+// Check if feature is enabled
+function feat(key){
+  if(!state.settings) state.settings = defaultSettings();
+  return state.settings[key] !== false;
+}
+
+// ========== WHO Standards ==========
 var WHO_STANDARDS = {
-  0:  { w: [3.3, 3.2], h: [49.9, 49.1] },
-  1:  { w: [4.5, 4.2], h: [54.7, 53.7] },
-  2:  { w: [5.6, 5.1], h: [58.4, 57.1] },
-  3:  { w: [6.4, 5.8], h: [61.4, 59.8] },
-  4:  { w: [7.0, 6.4], h: [63.9, 62.1] },
-  5:  { w: [7.5, 6.9], h: [65.9, 64.0] },
-  6:  { w: [7.9, 7.3], h: [67.6, 65.7] },
-  7:  { w: [8.3, 7.6], h: [69.2, 67.3] },
-  8:  { w: [8.6, 7.9], h: [70.6, 68.7] },
-  9:  { w: [8.9, 8.2], h: [72.0, 70.1] },
-  10: { w: [9.2, 8.5], h: [73.3, 71.5] },
-  11: { w: [9.4, 8.7], h: [74.5, 72.8] },
-  12: { w: [9.6, 8.9], h: [75.7, 74.0] },
-  15: { w: [10.3, 9.6], h: [79.1, 77.5] },
-  18: { w: [10.9, 10.2], h: [82.3, 80.7] },
-  21: { w: [11.5, 10.9], h: [85.1, 83.7] },
-  24: { w: [12.2, 11.5], h: [87.8, 86.4] }
+  0:{w:[3.3,3.2],h:[49.9,49.1]},1:{w:[4.5,4.2],h:[54.7,53.7]},2:{w:[5.6,5.1],h:[58.4,57.1]},
+  3:{w:[6.4,5.8],h:[61.4,59.8]},4:{w:[7.0,6.4],h:[63.9,62.1]},5:{w:[7.5,6.9],h:[65.9,64.0]},
+  6:{w:[7.9,7.3],h:[67.6,65.7]},7:{w:[8.3,7.6],h:[69.2,67.3]},8:{w:[8.6,7.9],h:[70.6,68.7]},
+  9:{w:[8.9,8.2],h:[72.0,70.1]},10:{w:[9.2,8.5],h:[73.3,71.5]},11:{w:[9.4,8.7],h:[74.5,72.8]},
+  12:{w:[9.6,8.9],h:[75.7,74.0]},15:{w:[10.3,9.6],h:[79.1,77.5]},18:{w:[10.9,10.2],h:[82.3,80.7]},
+  21:{w:[11.5,10.9],h:[85.1,83.7]},24:{w:[12.2,11.5],h:[87.8,86.4]}
 };
 
-// Hàm đánh giá so với chuẩn WHO
 function evaluateMetric(metricKey, val, dateStr) {
   if (!val || !state.baby.dob || (metricKey !== "w" && metricKey !== "h")) return null;
-  
   var b = new Date(state.baby.dob + "T00:00");
   var d = new Date((dateStr || isoDate()) + "T00:00");
-  var months = Math.round((d - b) / (864e5 * 30.4375)); // Số tháng tuổi
+  var months = Math.round((d - b) / (864e5 * 30.4375));
   if (months < 0 || months > 24) return null;
-
-  // Tìm mốc tháng gần nhất trong bảng WHO
   var keys = Object.keys(WHO_STANDARDS).map(Number).sort(function(a,b){return a-b;});
   var closestM = keys.reduce(function(prev, curr) {
     return (Math.abs(curr - months) < Math.abs(prev - months) ? curr : prev);
   });
-
   var genderIdx = (state.baby.gender === "Bé gái") ? 1 : 0;
   var std = WHO_STANDARDS[closestM][metricKey][genderIdx];
   var diff = val - std;
   var unit = metricKey === "w" ? "kg" : "cm";
   var diffFmt = (diff >= 0 ? "+" : "") + fmtNum(diff, 1) + " " + unit;
-
-  // Biên độ chuẩn: Cân nặng lệch <= 10%, Chiều cao lệch <= 3cm
   var threshold = metricKey === "w" ? std * 0.1 : 3.0;
-
-  if (Math.abs(diff) <= threshold) {
-    return { text: "Chuẩn WHO (" + diffFmt + ")", status: "normal" };
-  } else if (diff > threshold) {
-    return { text: "Vượt chuẩn (" + diffFmt + ")", status: "high" };
-  } else {
-    return { text: "Dưới chuẩn (" + diffFmt + ")", status: "low" };
-  }
+  if (Math.abs(diff) <= threshold) return { text: "Chuẩn WHO (" + diffFmt + ")", status: "normal" };
+  if (diff > threshold) return { text: "Vượt chuẩn (" + diffFmt + ")", status: "high" };
+  return { text: "Dưới chuẩn (" + diffFmt + ")", status: "low" };
 }
+
 function ageText(){
   var dob=state.baby.dob;if(!dob)return"Nhập ngày sinh để xem tuổi bé";
   var b=new Date(dob+"T00:00"),n=new Date();n.setHours(0,0,0,0);
@@ -631,16 +737,11 @@ function ageText(){
   if(m<24)return m+" tháng tuổi";
   return Math.floor(m/12)+" tuổi "+(m%12?m%12+" tháng":"");
 }
-function toast(t){var el=$("#toast");el.textContent=t;el.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){el.classList.remove("on");},2400);}
-function sortBy(arr,key,desc){return (arr||[]).slice().sort(function(a,b){return(a[key]<b[key]?-1:a[key]>b[key]?1:0)*(desc?-1:1);});}
 
-var METRICS={
-  w:{label:"Cân nặng",unit:"kg",dec:2},
-  h:{label:"Chiều cao",unit:"cm",dec:1},
-  hc:{label:"Vòng đầu",unit:"cm",dec:1}
-};
-var TABS=[["home","🏠","Tổng quan"],["growth","📈","Phát triển"],["care","🍼","Chăm sóc"],["plan","📅","Lịch hẹn"],["notes","📝","Nhật ký"]];
+var METRICS={w:{label:"Cân nặng",unit:"kg",dec:2},h:{label:"Chiều cao",unit:"cm",dec:1},hc:{label:"Vòng đầu",unit:"cm",dec:1}};
+var TABS=[["home","🏠","Tổng quan"],["growth","📈","Phát triển"],["care","🍼","Chăm sóc"],["plan","📅","Lịch hẹn"]];
 
+// ========== Sheet helpers ==========
 var sheetSubmit=null;
 function openSheet(title,body,submitLabel,onSubmit){
   sheetSubmit=onSubmit||null;
@@ -657,148 +758,242 @@ function confirmSheet(msg,onYes){
   openSheet("Xác nhận","<p class='hint' style='text-align:center'>"+esc(msg)+"</p>","Đồng ý xoá",onYes);
 }
 
-function fGrowth(){
-  openSheet("Thêm chỉ số phát triển",
-   '<div class="f"><label for="g_date">Ngày đo</label><input id="g_date" name="date" type="date" value="'+isoDate()+'"></div>'+
-   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="f"><label for="g_w">Cân nặng (kg)</label><input id="g_w" name="w" inputmode="decimal" placeholder="vd: 6.4"></div>'+
-   '<div class="f"><label for="g_h">Chiều cao (cm)</label><input id="g_h" name="h" inputmode="decimal" placeholder="vd: 63"></div></div>'+
-   '<div class="f"><label for="g_hc">Vòng đầu (cm)</label><input id="g_hc" name="hc" inputmode="decimal" placeholder="Không bắt buộc"></div>'+
-   '<div class="f"><label for="g_n">Ghi chú</label><input id="g_n" name="note" placeholder="vd: Bé cứng cáp..."></div>',
+// ========== FORMS ==========
+
+function fGrowth(editId){
+  var existing = editId ? (state.growth||[]).find(function(g){return g.id===editId;}) : null;
+  var title = existing ? "Sửa chỉ số phát triển" : "Thêm chỉ số phát triển";
+  openSheet(title,
+   '<div class="f"><label for="g_date">Ngày đo</label><input id="g_date" name="date" type="date" value="'+(existing?existing.date:isoDate())+'"></div>'+
+   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="f"><label for="g_w">Cân nặng (kg)</label><input id="g_w" name="w" inputmode="decimal" placeholder="vd: 6.4" value="'+(existing&&existing.w!=null?existing.w:"")+'"></div>'+
+   '<div class="f"><label for="g_h">Chiều cao (cm)</label><input id="g_h" name="h" inputmode="decimal" placeholder="vd: 63" value="'+(existing&&existing.h!=null?existing.h:"")+'"></div></div>'+
+   '<div class="f"><label for="g_hc">Vòng đầu (cm)</label><input id="g_hc" name="hc" inputmode="decimal" placeholder="Không bắt buộc" value="'+(existing&&existing.hc!=null?existing.hc:"")+'"></div>'+
+   '<div class="f"><label for="g_n">Ghi chú</label><input id="g_n" name="note" placeholder="vd: Bé cứng cáp..." value="'+(existing?esc(existing.note||""):"")+'"></div>',
    "Lưu chỉ số",function(){
     var v=vals(),w=num(v.w),h=num(v.h),hc=num(v.hc);
     if(!v.date)return sErr("Vui lòng chọn ngày đo.");
     if([w,h,hc].some(function(x){return x!==x;}))return sErr("Số đo phải là số lớn hơn 0.");
     if(w===null&&h===null&&hc===null)return sErr("Nhập ít nhất một chỉ số đo.");
-    state.growth.push({id:uid(),date:v.date,w:w,h:h,hc:hc,note:v.note.trim()});
-    save();closeSheet();render();toast("Đã lưu chỉ số");
+    if(existing){
+      existing.date=v.date;existing.w=w;existing.h=h;existing.hc=hc;existing.note=v.note.trim();
+    } else {
+      state.growth.push({id:uid(),date:v.date,w:w,h:h,hc:hc,note:v.note.trim()});
+    }
+    save();closeSheet();render();toast(existing?"Đã cập nhật":"Đã lưu chỉ số");
   });
 }
 
-function fFeed(){
-  openSheet("Ghi cữ bú của bé",
-   '<div class="f"><label for="f_dt">Thời điểm</label><input id="f_dt" name="dt" type="datetime-local" value="'+isoDT()+'"></div>'+
-   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="f"><label for="f_ml">Lượng sữa (ml)</label><input id="f_ml" name="ml" inputmode="numeric" placeholder="vd: 120"></div>'+
-   '<div class="f"><label for="f_t">Loại sữa</label><select id="f_t" name="type"><option>Sữa mẹ (bình)</option><option>Sữa công thức</option><option>Bú mẹ trực tiếp</option><option>Sữa mẹ + công thức</option></select></div></div>',
-   "Lưu cữ sữa",function(){
-    var v=vals(),ml=num(v.ml);
-    if(!v.dt)return sErr("Vui lòng chọn thời điểm.");
-    if(ml===null||ml!==ml)return sErr("Nhập lượng sữa bằng số (ml).");
-    state.feeds.push({id:uid(),dt:v.dt,ml:ml,type:v.type});
-    save();closeSheet();render();toast("Đã ghi cữ sữa");
-  });
-}
+function fFeed(prefillDt, prefillDuration, editId){
+  var existing = editId ? (state.feeds||[]).find(function(f){return f.id===editId;}) : null;
+  var title = existing ? "Sửa cữ bú" : "Ghi cữ bú của bé";
+  var dtVal = existing ? existing.dt : (prefillDt || isoDT());
+  var mlVal = existing ? (existing.ml||"") : "";
+  var typeVal = existing ? existing.type : "Sữa mẹ (bình)";
+  var durVal = existing ? (existing.duration||"") : (prefillDuration||"");
+  var noteVal = existing ? (existing.note||"") : "";
 
-function fPump(){
-  openSheet("Ghi cữ hút sữa của mẹ",
-   '<div class="f"><label for="p_dt">Thời điểm hút</label><input id="p_dt" name="dt" type="datetime-local" value="'+isoDT()+'"></div>'+
+  openSheet(title,
+   '<div class="f"><label for="f_dt">Thời điểm</label><input id="f_dt" name="dt" type="datetime-local" value="'+dtVal+'"></div>'+
    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'+
-     '<div class="f"><label for="p_l">Ngực trái L (ml)</label><input id="p_l" name="mlL" inputmode="numeric" placeholder="vd: 60"></div>'+
-     '<div class="f"><label for="p_r">Ngực phải R (ml)</label><input id="p_r" name="mlR" inputmode="numeric" placeholder="vd: 70"></div>'+
+     '<div class="f"><label for="f_ml">Lượng sữa (ml) <span style="color:var(--muted);font-weight:500">tuỳ chọn</span></label><input id="f_ml" name="ml" inputmode="numeric" placeholder="vd: 120" value="'+mlVal+'"></div>'+
+     '<div class="f"><label for="f_dur">Thời gian bú (phút)</label><input id="f_dur" name="duration" inputmode="numeric" placeholder="vd: 15" value="'+durVal+'"></div>'+
    '</div>'+
-   '<div class="f"><label for="p_tot">Hoặc nhập thẳng Tổng (ml)</label><input id="p_tot" name="mlTot" inputmode="numeric" placeholder="vd: 130"></div>'+
-   '<div class="f"><label for="p_n">Ghi chú</label><input id="p_n" name="note" placeholder="vd: Cữ sáng, trữ đông..."></div>',
+   '<div class="f"><label for="f_t">Loại sữa</label><select id="f_t" name="type">'+
+     '<option'+(typeVal==="Sữa mẹ (bình)"?" selected":"")+'>Sữa mẹ (bình)</option>'+
+     '<option'+(typeVal==="Sữa công thức"?" selected":"")+'>Sữa công thức</option>'+
+     '<option'+(typeVal==="Bú mẹ trực tiếp"?" selected":"")+'>Bú mẹ trực tiếp</option>'+
+     '<option'+(typeVal==="Sữa mẹ + công thức"?" selected":"")+'>Sữa mẹ + công thức</option>'+
+   '</select></div>'+
+   '<div class="f"><label for="f_n">Ghi chú</label><input id="f_n" name="note" placeholder="vd: Bé bú ngoan..." value="'+esc(noteVal)+'"></div>'+
+   (!existing && !prefillDt ? '<button class="btn ghost wide small" data-act="timerStart" style="margin-bottom:12px">⏱️ Bấm giờ bé ăn</button>' : ''),
+   "Lưu cữ sữa",function(){
+    var v=vals(),ml=num(v.ml),dur=num(v.duration);
+    if(!v.dt)return sErr("Vui lòng chọn thời điểm.");
+    if(ml!==null && ml!==ml)return sErr("Lượng sữa phải là số hợp lệ.");
+    if(existing){
+      existing.dt=v.dt;existing.ml=ml||0;existing.type=v.type;existing.duration=dur||0;existing.note=v.note.trim();
+    } else {
+      state.feeds.push({id:uid(),dt:v.dt,ml:ml||0,type:v.type,duration:dur||0,note:v.note.trim()});
+    }
+    save();closeSheet();render();toast(existing?"Đã cập nhật":"Đã ghi cữ sữa");
+  });
+}
+
+function fPump(editId){
+  var existing = editId ? (state.pumps||[]).find(function(p){return p.id===editId;}) : null;
+  var title = existing ? "Sửa cữ hút sữa" : "Ghi cữ hút sữa của mẹ";
+  openSheet(title,
+   '<div class="f"><label for="p_dt">Thời điểm hút</label><input id="p_dt" name="dt" type="datetime-local" value="'+(existing?existing.dt:isoDT())+'"></div>'+
+   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'+
+     '<div class="f"><label for="p_l">Ngực trái L (ml)</label><input id="p_l" name="mlL" inputmode="numeric" placeholder="vd: 60" value="'+(existing?existing.mlL||"":"")+'"></div>'+
+     '<div class="f"><label for="p_r">Ngực phải R (ml)</label><input id="p_r" name="mlR" inputmode="numeric" placeholder="vd: 70" value="'+(existing?existing.mlR||"":"")+'"></div>'+
+   '</div>'+
+   '<div class="f"><label for="p_tot">Hoặc nhập thẳng Tổng (ml)</label><input id="p_tot" name="mlTot" inputmode="numeric" placeholder="vd: 130" value="'+(existing?existing.total||"":"")+'"></div>'+
+   '<div class="f"><label for="p_n">Ghi chú</label><input id="p_n" name="note" placeholder="vd: Cữ sáng, trữ đông..." value="'+(existing?esc(existing.note||""):"")+'"></div>',
    "Lưu cữ hút",function(){
     var v=vals();
     if(!v.dt)return sErr("Vui lòng chọn thời điểm hút sữa.");
     var l=num(v.mlL)||0, r=num(v.mlR)||0, totInput=num(v.mlTot);
     var total = totInput ? totInput : (l + r);
     if(!total || total <= 0) return sErr("Vui lòng nhập lượng sữa hút được (ml).");
-    state.pumps = state.pumps || [];
-    state.pumps.push({id:uid(), dt:v.dt, mlL:l, mlR:r, total:total, note:v.note.trim()});
-    save();closeSheet();render();toast("Đã ghi cữ hút sữa");
+    if(existing){
+      existing.dt=v.dt;existing.mlL=l;existing.mlR=r;existing.total=total;existing.note=v.note.trim();
+    } else {
+      state.pumps = state.pumps || [];
+      state.pumps.push({id:uid(), dt:v.dt, mlL:l, mlR:r, total:total, note:v.note.trim()});
+    }
+    save();closeSheet();render();toast(existing?"Đã cập nhật":"Đã ghi cữ hút sữa");
   });
 }
 
-function fSleep(){
+function fSleep(editId){
+  var existing = editId ? (state.sleeps||[]).find(function(s){return s.id===editId;}) : null;
+  var title = existing ? "Sửa giấc ngủ" : "Ghi giấc ngủ của bé";
   var now=new Date(),st=new Date(now.getTime()-60*60000);
-  openSheet("Ghi giấc ngủ của bé",
-   '<div class="f"><label for="s_a">Bắt đầu ngủ</label><input id="s_a" name="start" type="datetime-local" value="'+isoDT(st)+'"></div>'+
-   '<div class="f"><label for="s_b">Thức dậy</label><input id="s_b" name="end" type="datetime-local" value="'+isoDT(now)+'"></div>',
+  openSheet(title,
+   '<div class="f"><label for="s_a">Bắt đầu ngủ</label><input id="s_a" name="start" type="datetime-local" value="'+(existing?existing.start:isoDT(st))+'"></div>'+
+   '<div class="f"><label for="s_b">Thức dậy</label><input id="s_b" name="end" type="datetime-local" value="'+(existing?existing.end:isoDT(now))+'"></div>',
    "Lưu giấc ngủ",function(){
     var v=vals();
     if(!v.start||!v.end)return sErr("Vui lòng chọn giờ bắt đầu và thức dậy.");
     if(new Date(v.end)<=new Date(v.start))return sErr("Giờ thức dậy phải sau giờ bắt đầu.");
-    state.sleeps.push({id:uid(),start:v.start,end:v.end});
-    save();closeSheet();render();toast("Đã lưu giấc ngủ");
+    if(existing){
+      existing.start=v.start;existing.end=v.end;
+    } else {
+      state.sleeps.push({id:uid(),start:v.start,end:v.end});
+    }
+    save();closeSheet();render();toast(existing?"Đã cập nhật":"Đã lưu giấc ngủ");
   });
 }
 
-function fDiaper(){
-  openSheet("Ghi nhận thay tã",
-   '<div class="f"><label for="d_dt">Thời điểm</label><input id="d_dt" name="dt" type="datetime-local" value="'+isoDT()+'"></div>'+
+function fDiaper(editId){
+  var existing = editId ? (state.diapers||[]).find(function(d){return d.id===editId;}) : null;
+  var title = existing ? "Sửa thay tã" : "Ghi nhận thay tã";
+  openSheet(title,
+   '<div class="f"><label for="d_dt">Thời điểm</label><input id="d_dt" name="dt" type="datetime-local" value="'+(existing?existing.dt:isoDT())+'"></div>'+
    '<div class="f"><label for="d_type">Tình trạng tã</label><select id="d_type" name="type">'+
-     '<option value="wet">💧 Tã ướt (Chỉ tè)</option>'+
-     '<option value="dirty">💩 Tã bẩn (Đi ị)</option>'+
-     '<option value="both">💧💩 Cả tè và ị</option>'+
+     '<option value="wet"'+(existing&&existing.type==="wet"?" selected":"")+'>💧 Tã ướt (Chỉ tè)</option>'+
+     '<option value="dirty"'+(existing&&existing.type==="dirty"?" selected":"")+'>💩 Tã bẩn (Đi ị)</option>'+
+     '<option value="both"'+(existing&&existing.type==="both"?" selected":"")+'>💧💩 Cả tè và ị</option>'+
    '</select></div>'+
    '<div class="f"><label for="d_poo">Đặc điểm phân</label><select id="d_poo" name="poo">'+
-     '<option value="Bình thường">Hoa cà hoa cải / Bình thường</option>'+
-     '<option value="Lỏng / Nhầy">Lỏng / Có bọt / Nhầy</option>'+
-     '<option value="Khuôn mềm">Khuôn mềm</option>'+
-     '<option value="Táo bón">Táo bón / Cứng</option>'+
+     '<option value="Bình thường"'+(existing&&existing.poo==="Bình thường"?" selected":"")+'>Hoa cà hoa cải / Bình thường</option>'+
+     '<option value="Lỏng / Nhầy"'+(existing&&existing.poo==="Lỏng / Nhầy"?" selected":"")+'>Lỏng / Có bọt / Nhầy</option>'+
+     '<option value="Khuôn mềm"'+(existing&&existing.poo==="Khuôn mềm"?" selected":"")+'>Khuôn mềm</option>'+
+     '<option value="Táo bón"'+(existing&&existing.poo==="Táo bón"?" selected":"")+'>Táo bón / Cứng</option>'+
    '</select></div>'+
-   '<div class="f"><label for="d_note">Ghi chú</label><input id="d_note" name="note" placeholder="vd: Màu vàng tươi..."></div>',
+   '<div class="f"><label for="d_note">Ghi chú</label><input id="d_note" name="note" placeholder="vd: Màu vàng tươi..." value="'+(existing?esc(existing.note||""):"")+'"></div>',
    "Lưu thay tã",function(){
     var v=vals();
     if(!v.dt)return sErr("Chọn thời điểm.");
-    state.diapers = state.diapers || [];
-    state.diapers.push({id:uid(), dt:v.dt, type:v.type, poo:v.poo, note:v.note.trim()});
-    save();closeSheet();render();toast("Đã lưu thay tã");
+    if(existing){
+      existing.dt=v.dt;existing.type=v.type;existing.poo=v.poo;existing.note=v.note.trim();
+    } else {
+      state.diapers = state.diapers || [];
+      state.diapers.push({id:uid(), dt:v.dt, type:v.type, poo:v.poo, note:v.note.trim()});
+    }
+    save();closeSheet();render();toast(existing?"Đã cập nhật":"Đã lưu thay tã");
   });
 }
 
-function fFever(){
-  openSheet("Theo dõi thân nhiệt",
-   '<div class="f"><label for="fe_dt">Thời điểm đo</label><input id="fe_dt" name="dt" type="datetime-local" value="'+isoDT()+'"></div>'+
+function fFever(editId){
+  var existing = editId ? (state.fevers||[]).find(function(f){return f.id===editId;}) : null;
+  var title = existing ? "Sửa thân nhiệt" : "Theo dõi thân nhiệt";
+  openSheet(title,
+   '<div class="f"><label for="fe_dt">Thời điểm đo</label><input id="fe_dt" name="dt" type="datetime-local" value="'+(existing?existing.dt:isoDT())+'"></div>'+
    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'+
-     '<div class="f"><label for="fe_t">Nhiệt độ (°C)</label><input id="fe_t" name="temp" inputmode="decimal" placeholder="vd: 38.2"></div>'+
-     '<div class="f"><label for="fe_pos">Vị trí đo</label><select id="fe_pos" name="pos"><option>Nách</option><option>Trán</option><option>Tai</option><option>Hậu môn</option></select></div>'+
+     '<div class="f"><label for="fe_t">Nhiệt độ (°C)</label><input id="fe_t" name="temp" inputmode="decimal" placeholder="vd: 38.2" value="'+(existing?existing.temp:"")+'"></div>'+
+     '<div class="f"><label for="fe_pos">Vị trí đo</label><select id="fe_pos" name="pos">'+
+       '<option'+(existing&&existing.pos==="Nách"?" selected":"")+'>Nách</option>'+
+       '<option'+(existing&&existing.pos==="Trán"?" selected":"")+'>Trán</option>'+
+       '<option'+(existing&&existing.pos==="Tai"?" selected":"")+'>Tai</option>'+
+       '<option'+(existing&&existing.pos==="Hậu môn"?" selected":"")+'>Hậu môn</option>'+
+     '</select></div>'+
    '</div>'+
-   '<div class="f"><label for="fe_med">Thuốc đã uống (nếu có)</label><input id="fe_med" name="med" placeholder="vd: Hapacol 80mg lúc 14h..."></div>'+
-   '<div class="f"><label for="fe_n">Ghi chú biểu hiện</label><input id="fe_n" name="note" placeholder="vd: Bé quấy, chân tay ấm..."></div>',
+   '<div class="f"><label for="fe_med">Thuốc đã uống (nếu có)</label><input id="fe_med" name="med" placeholder="vd: Hapacol 80mg lúc 14h..." value="'+(existing?esc(existing.med||""):"")+'"></div>'+
+   '<div class="f"><label for="fe_n">Ghi chú biểu hiện</label><input id="fe_n" name="note" placeholder="vd: Bé quấy, chân tay ấm..." value="'+(existing?esc(existing.note||""):"")+'"></div>',
    "Lưu thân nhiệt",function(){
     var v=vals(), t=num(v.temp);
     if(!v.dt)return sErr("Vui lòng chọn thời điểm đo.");
     if(!t || t < 34 || t > 43)return sErr("Nhiệt độ không hợp lệ (nhập từ 35 đến 42°C).");
-    state.fevers = state.fevers || [];
-    state.fevers.push({id:uid(), dt:v.dt, temp:t, pos:v.pos, med:v.med.trim(), note:v.note.trim()});
-    save();closeSheet();render();toast("Đã lưu thân nhiệt");
+    if(existing){
+      existing.dt=v.dt;existing.temp=t;existing.pos=v.pos;existing.med=v.med.trim();existing.note=v.note.trim();
+    } else {
+      state.fevers = state.fevers || [];
+      state.fevers.push({id:uid(), dt:v.dt, temp:t, pos:v.pos, med:v.med.trim(), note:v.note.trim()});
+    }
+    save();closeSheet();render();toast(existing?"Đã cập nhật":"Đã lưu thân nhiệt");
   });
 }
 
-function fEvent(){
-  openSheet("Thêm lịch hẹn",
-   '<div class="f"><label for="e_t">Nội dung</label><input id="e_t" name="title" placeholder="vd: Tiêm mũi 6 trong 1"></div>'+
-   '<div class="f"><label for="e_k">Phân loại</label><select id="e_k" name="kind"><option value="tiem">💉 Tiêm phòng</option><option value="be">🩺 Khám bé</option><option value="thai">🤰 Khám thai</option><option value="khac">📌 Khác</option></select></div>'+
-   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="f"><label for="e_d">Ngày hẹn</label><input id="e_d" name="date" type="date" value="'+isoDate()+'"></div>'+
-   '<div class="f"><label for="e_h">Giờ</label><input id="e_h" name="time" type="time"></div></div>',
+function fWater(editId){
+  var existing = editId ? (state.waters||[]).find(function(w){return w.id===editId;}) : null;
+  var title = existing ? "Sửa nước uống" : "Ghi nước mẹ uống";
+  openSheet(title,
+   '<div class="f"><label for="w_dt">Thời điểm</label><input id="w_dt" name="dt" type="datetime-local" value="'+(existing?existing.dt:isoDT())+'"></div>'+
+   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'+
+     '<div class="f"><label for="w_ml">Lượng nước (ml)</label><input id="w_ml" name="ml" inputmode="numeric" placeholder="vd: 250" value="'+(existing?existing.ml||"":"")+'"></div>'+
+     '<div class="f"><label for="w_type">Loại</label><select id="w_type" name="type">'+
+       '<option value="Nước lọc"'+(existing&&existing.type==="Nước lọc"?" selected":"")+'>💧 Nước lọc</option>'+
+       '<option value="Sữa"'+(existing&&existing.type==="Sữa"?" selected":"")+'>🥛 Sữa</option>'+
+       '<option value="Nước trái cây"'+(existing&&existing.type==="Nước trái cây"?" selected":"")+'>🧃 Nước trái cây</option>'+
+       '<option value="Canh/Soup"'+(existing&&existing.type==="Canh/Soup"?" selected":"")+'>🍲 Canh/Soup</option>'+
+       '<option value="Khác"'+(existing&&existing.type==="Khác"?" selected":"")+'>📌 Khác</option>'+
+     '</select></div>'+
+   '</div>'+
+   '<div class="f"><label for="w_n">Ghi chú</label><input id="w_n" name="note" placeholder="vd: Sau bữa ăn..." value="'+(existing?esc(existing.note||""):"")+'"></div>',
+   "Lưu",function(){
+    var v=vals(),ml=num(v.ml);
+    if(!v.dt)return sErr("Chọn thời điểm.");
+    if(!ml || ml!==ml)return sErr("Nhập lượng nước (ml).");
+    if(existing){
+      existing.dt=v.dt;existing.ml=ml;existing.type=v.type;existing.note=v.note.trim();
+    } else {
+      state.waters = state.waters || [];
+      state.waters.push({id:uid(), dt:v.dt, ml:ml, type:v.type, note:v.note.trim()});
+    }
+    save();closeSheet();render();toast(existing?"Đã cập nhật":"Đã lưu nước uống");
+  });
+}
+
+function fEvent(editId){
+  var existing = editId ? (state.events||[]).find(function(e){return e.id===editId;}) : null;
+  var title = existing ? "Sửa lịch hẹn" : "Thêm lịch hẹn";
+  openSheet(title,
+   '<div class="f"><label for="e_t">Nội dung</label><input id="e_t" name="title" placeholder="vd: Tiêm mũi 6 trong 1" value="'+(existing?esc(existing.title):"")+'"></div>'+
+   '<div class="f"><label for="e_k">Phân loại</label><select id="e_k" name="kind">'+
+     '<option value="tiem"'+(existing&&existing.kind==="tiem"?" selected":"")+'>💉 Tiêm phòng</option>'+
+     '<option value="be"'+(existing&&existing.kind==="be"?" selected":"")+'>🩺 Khám bé</option>'+
+     '<option value="thai"'+(existing&&existing.kind==="thai"?" selected":"")+'>🤰 Khám thai</option>'+
+     '<option value="khac"'+(existing&&existing.kind==="khac"?" selected":"")+'>📌 Khác</option>'+
+   '</select></div>'+
+   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="f"><label for="e_d">Ngày hẹn</label><input id="e_d" name="date" type="date" value="'+(existing?existing.date:isoDate())+'"></div>'+
+   '<div class="f"><label for="e_h">Giờ</label><input id="e_h" name="time" type="time" value="'+(existing?existing.time||"":"")+'"></div></div>',
    "Lưu lịch hẹn",function(){
     var v=vals();
     if(!v.title.trim())return sErr("Nhập nội dung lịch hẹn.");
     if(!v.date)return sErr("Chọn ngày.");
-    state.events.push({id:uid(),title:v.title.trim(),kind:v.kind,date:v.date,time:v.time,done:false});
-    save();closeSheet();render();toast("Đã thêm lịch hẹn");
-  });
-}
-
-function fNote(){
-  openSheet("Nhật ký khoảnh khắc",
-   '<div class="f"><label for="n_d">Ngày</label><input id="n_d" name="date" type="date" value="'+isoDate()+'"></div>'+
-   '<div class="f"><label for="n_t">Hôm nay bé thế nào?</label><textarea id="n_t" name="text" placeholder="Ví dụ: Bé biết lẫy, cười nhiều..."></textarea></div>',
-   "Lưu nhật ký",function(){
-    var v=vals();
-    if(!v.text.trim())return sErr("Nhập nội dung nhật ký.");
-    state.notes.push({id:uid(),date:v.date||isoDate(),text:v.text.trim(),ts:Date.now()});
-    save();closeSheet();render();toast("Đã lưu nhật ký");
+    if(existing){
+      existing.title=v.title.trim();existing.kind=v.kind;existing.date=v.date;existing.time=v.time;
+    } else {
+      state.events.push({id:uid(),title:v.title.trim(),kind:v.kind,date:v.date,time:v.time,done:false});
+    }
+    save();closeSheet();render();toast(existing?"Đã cập nhật":"Đã thêm lịch hẹn");
   });
 }
 
 function fSettings(){
   var b=state.baby;
+  var s=state.settings||defaultSettings();
   var userDisplay = currentUser ? (currentUser.displayName || currentUser.email) : "";
   var photoUrl = (currentUser && currentUser.photoURL) ? currentUser.photoURL : "";
   
-  openSheet("Hồ sơ & Tài khoản",
+  function togRow(key, icon, label){
+    return '<div class="toggle-row"><div class="tl">'+icon+' '+label+'</div>'+
+      '<button class="toggle-sw" data-toggle="'+key+'" aria-checked="'+(s[key]!==false)+'" role="switch"></button></div>';
+  }
+
+  openSheet("Hồ sơ & Cài đặt",
    '<div class="f" style="display:flex;align-items:center;gap:12px;background:var(--bg);padding:12px;border-radius:14px;border:1px solid var(--line)">'+
      (photoUrl ? '<img src="'+photoUrl+'" style="width:38px;height:38px;border-radius:50%;object-fit:cover">' : '<div style="font-size:28px">👤</div>')+
      '<div style="flex:1;min-width:0"><div style="font-size:11px;color:var(--muted);font-weight:700">Tài khoản</div><div style="font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(userDisplay)+'</div></div>'+
@@ -808,13 +1003,30 @@ function fSettings(){
    '<div class="f"><label for="b_n">Tên bé</label><input id="b_n" name="name" value="'+esc(b.name)+'" placeholder="vd: Bống, Cún..."></div>'+
    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="f"><label for="b_d">Ngày sinh</label><input id="b_d" name="dob" type="date" value="'+esc(b.dob)+'"></div>'+
    '<div class="f"><label for="b_g">Giới tính</label><select id="b_g" name="gender"><option value="">Chưa chọn</option><option value="Bé trai"'+(b.gender==="Bé trai"?" selected":"")+'>👦 Bé trai</option><option value="Bé gái"'+(b.gender==="Bé gái"?" selected":"")+'>👧 Bé gái</option></select></div></div>'+
+   '<hr>'+
+   '<div style="font-size:13px;font-weight:800;margin-bottom:8px;color:var(--ink)">🔧 Bật / Tắt tính năng</div>'+
+   '<div style="background:var(--bg);border-radius:14px;padding:4px 14px;border:1px solid var(--line)">'+
+     togRow("feeds","🍼","Bú bình")+
+     togRow("pumps","🌸","Hút sữa mẹ")+
+     togRow("diapers","🧷","Thay tã")+
+     togRow("sleeps","🌙","Giấc ngủ")+
+     togRow("fevers","🌡️","Cặp nhiệt / Thuốc")+
+     togRow("waters","💧","Nước mẹ uống")+
+     togRow("growth","📏","Chỉ số phát triển")+
+     togRow("photos","📷","Ảnh đính kèm")+
+   '</div>'+
    '<button class="btn danger wide small" data-act="wipe" style="margin-top:14px">Xoá toàn bộ dữ liệu của tài khoản</button>',
    "Lưu hồ sơ",function(){
     var v=vals();state.baby={name:v.name.trim(),dob:v.dob,gender:v.gender};
+    // Lưu settings từ toggles
+    document.querySelectorAll("#pn [data-toggle]").forEach(function(el){
+      state.settings[el.getAttribute("data-toggle")] = el.getAttribute("aria-checked") === "true";
+    });
     save();closeSheet();render();toast("Đã cập nhật hồ sơ");
   });
 }
 
+// ========== VIEW FUNCTIONS ==========
 function latestOf(key){
   var arr=sortBy((state.growth||[]).filter(function(g){return g[key]!=null;}),"date",true);
   return {cur:arr[0]||null,prev:arr[1]||null};
@@ -826,54 +1038,57 @@ function vHome(){
     h+='<section class="card" style="background:var(--primary-soft);border:1.5px dashed var(--primary-border)"><div class="t" style="font-weight:800;font-size:15px;color:var(--primary)">Chào mừng ba mẹ!</div><p class="hint" style="margin:4px 0 10px">Nhập tên và ngày sinh để xem tuổi bé và theo dõi phát triển chuẩn xác.</p><button class="btn small" data-act="settings">Nhập hồ sơ cho bé</button></section>';
   }
   
-  h+='<section><div class="strip">';
-  ["w","h","hc"].forEach(function(k){
-    var m=METRICS[k],L=latestOf(k),cls="",val='<span>--</span>',d='Chưa có số đo';
-    var statusCls = "";
-    if(L.cur){
-      val=fmtNum(L.cur[k],m.dec)+'<small>'+m.unit+'</small>';
-      var evalRes = evaluateMetric(k, L.cur[k], L.cur.date);
-      if(evalRes){
-        d = evalRes.text;
-        statusCls = evalRes.status; // normal, high, low
-      } else {
-        d = 'Đo ' + fmtShort(L.cur.date);
-        if(L.prev){
-          var diff = L.cur[k] - L.prev[k];
-          d = (diff>=0?"+":"-") + fmtNum(Math.abs(diff),m.dec) + " " + m.unit + " so với trước";
+  if(feat("growth")){
+    h+='<section><div class="strip">';
+    ["w","h","hc"].forEach(function(k){
+      var m=METRICS[k],L=latestOf(k),cls="",val='<span>--</span>',d='Chưa có số đo';
+      var statusCls = "";
+      if(L.cur){
+        val=fmtNum(L.cur[k],m.dec)+'<small>'+m.unit+'</small>';
+        var evalRes = evaluateMetric(k, L.cur[k], L.cur.date);
+        if(evalRes){ d = evalRes.text; statusCls = evalRes.status; }
+        else {
+          d = 'Đo ' + fmtShort(L.cur.date);
+          if(L.prev){ var diff = L.cur[k] - L.prev[k]; d = (diff>=0?"+":"-") + fmtNum(Math.abs(diff),m.dec) + " " + m.unit + " so với trước"; }
         }
-      }
-    }else cls="empty";
-    h+='<div class="'+(k==="w"?"w ":"")+cls+'"><div class="k">'+m.label+'</div><div class="v">'+val+'</div><div class="d who-tag '+statusCls+'">'+d+'</div></div>';
-  });
-  h+='</div></section>';
+      }else cls="empty";
+      h+='<div class="'+(k==="w"?"w ":"")+cls+'"><div class="k">'+m.label+'</div><div class="v">'+val+'</div><div class="d who-tag '+statusCls+'">'+d+'</div></div>';
+    });
+    h+='</div></section>';
+  }
   
   var today=isoDate();
-  var feedMl=(state.feeds||[]).filter(function(f){return f.dt.slice(0,10)===today;}).reduce(function(a,f){return a+f.ml;},0);
-  var pumpMl=(state.pumps||[]).filter(function(p){return p.dt.slice(0,10)===today;}).reduce(function(a,p){return a+p.total;},0);
-  var sleepMinTot=(state.sleeps||[]).filter(function(s){return s.end.slice(0,10)===today;}).reduce(function(a,s){return a+sleepMin(s);},0);
-  var diaperCount=(state.diapers||[]).filter(function(d){return d.dt.slice(0,10)===today;}).length;
+  var feedMl=feat("feeds")?(state.feeds||[]).filter(function(f){return f.dt.slice(0,10)===today;}).reduce(function(a,f){return a+(f.ml||0);},0):0;
+  var pumpMl=feat("pumps")?(state.pumps||[]).filter(function(p){return p.dt.slice(0,10)===today;}).reduce(function(a,p){return a+p.total;},0):0;
+  var sleepMinTot=feat("sleeps")?(state.sleeps||[]).filter(function(s){return s.end.slice(0,10)===today;}).reduce(function(a,s){return a+sleepMin(s);},0):0;
+  var diaperCount=feat("diapers")?(state.diapers||[]).filter(function(d){return d.dt.slice(0,10)===today;}).length:0;
+  var waterMl=feat("waters")?(state.waters||[]).filter(function(w){return w.dt.slice(0,10)===today;}).reduce(function(a,w){return a+(w.ml||0);},0):0;
 
-  h+='<section><div class="sec-title"><span>📊</span> Hôm nay của bé</div><div class="grid-stats">'+
-     '<div class="mini milk"><div class="k">🍼 Bé bú</div><div class="v">'+fmtNum(feedMl,0)+' <small>ml</small></div></div>'+
-     '<div class="mini pump"><div class="k">🌸 Mẹ hút</div><div class="v">'+fmtNum(pumpMl,0)+' <small>ml</small></div></div>'+
-     '<div class="mini sleep"><div class="k">🌙 Bé ngủ</div><div class="v">'+(sleepMinTot?fmtMin(sleepMinTot):"0p")+'</div></div>'+
-     '<div class="mini diaper"><div class="k">🧷 Thay tã</div><div class="v">'+diaperCount+' <small>lần</small></div></div>'+
-     '</div></section>';
+  var statsHtml = '';
+  if(feat("feeds")) statsHtml+='<div class="mini milk"><div class="k">🍼 Bé bú</div><div class="v">'+fmtNum(feedMl,0)+' <small>ml</small></div></div>';
+  if(feat("pumps")) statsHtml+='<div class="mini pump"><div class="k">🌸 Mẹ hút</div><div class="v">'+fmtNum(pumpMl,0)+' <small>ml</small></div></div>';
+  if(feat("sleeps")) statsHtml+='<div class="mini sleep"><div class="k">🌙 Bé ngủ</div><div class="v">'+(sleepMinTot?fmtMin(sleepMinTot):"0p")+'</div></div>';
+  if(feat("diapers")) statsHtml+='<div class="mini diaper"><div class="k">🧷 Thay tã</div><div class="v">'+diaperCount+' <small>lần</small></div></div>';
+  if(feat("waters")) statsHtml+='<div class="mini water"><div class="k">💧 Nước mẹ</div><div class="v">'+fmtNum(waterMl,0)+' <small>ml</small></div></div>';
+  
+  if(statsHtml) h+='<section><div class="sec-title"><span>📊</span> Hôm nay</div><div class="grid-stats">'+statsHtml+'</div></section>';
 
   var nxt=sortBy((state.events||[]).filter(function(e){return!e.done;}),"date",false)[0];
   h+='<section><div class="sec-title"><span>📅</span> Lịch hẹn sắp tới</div>';
   if(nxt){h+=eventRow(nxt);}else h+='<div class="empty-note"><b>Chưa có lịch hẹn nào</b>Thêm lịch tiêm phòng hoặc khám định kỳ ở tab Lịch hẹn.</div>';
   h+='</section>';
 
-  h+='<section><div class="sec-title"><span>⚡</span> Ghi nhanh một chạm</div><div class="quick">'+
-     '<button class="btn ghost" data-act="addFeed">🍼 Bú bình</button>'+
-     '<button class="btn ghost" data-act="addPump">🌸 Hút sữa</button>'+
-     '<button class="btn ghost" data-act="addDiaper">🧷 Thay tã</button>'+
-     '<button class="btn ghost" data-act="addSleep">🌙 Bé ngủ</button>'+
-     '<button class="btn ghost" data-act="addFever">🌡️ Cặp nhiệt</button>'+
-     '<button class="btn ghost" data-act="addGrowth">📏 Chỉ số</button>'+
-     '</div></section>';
+  // Quick actions - chỉ hiện tính năng đã bật
+  var qActions = '';
+  if(feat("feeds")) qActions+='<button class="btn ghost" data-act="addFeed">🍼 Bú bình</button>';
+  if(feat("pumps")) qActions+='<button class="btn ghost" data-act="addPump">🌸 Hút sữa</button>';
+  if(feat("diapers")) qActions+='<button class="btn ghost" data-act="addDiaper">🧷 Thay tã</button>';
+  if(feat("sleeps")) qActions+='<button class="btn ghost" data-act="addSleep">🌙 Bé ngủ</button>';
+  if(feat("fevers")) qActions+='<button class="btn ghost" data-act="addFever">🌡️ Cặp nhiệt</button>';
+  if(feat("growth")) qActions+='<button class="btn ghost" data-act="addGrowth">📏 Chỉ số</button>';
+  if(feat("waters")) qActions+='<button class="btn ghost" data-act="addWater">💧 Nước mẹ</button>';
+
+  if(qActions) h+='<section><div class="sec-title"><span>⚡</span> Ghi nhanh một chạm</div><div class="quick">'+qActions+'</div></section>';
   return h;
 }
 
@@ -898,6 +1113,36 @@ function chart(key){
   return s;
 }
 
+// ========== Care Bar Chart ==========
+function careBarChart(dataByDay, color, unit){
+  // Lấy 7 ngày gần nhất
+  var days = [];
+  for(var i=6;i>=0;i--){
+    var d = new Date(); d.setDate(d.getDate()-i);
+    days.push(isoDate(d));
+  }
+  var vals = days.map(function(d){ return dataByDay[d]||0; });
+  var mx = Math.max.apply(null, vals) || 1;
+  
+  var h = '<div class="card" style="padding:12px 10px 8px;margin-bottom:12px"><div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px">📊 7 ngày gần đây</div><div class="bar-chart">';
+  days.forEach(function(d,i){
+    var v = vals[i];
+    var pct = Math.round(v/mx*100);
+    var barH = Math.max(2, pct * 0.7);
+    var dayLabel = d.slice(8,10)+'/'+d.slice(5,7);
+    var isToday = d === isoDate();
+    h+='<div class="bar-col"><div class="bar-val">'+(v?fmtNum(v,0):"")+'</div>'+
+       '<div class="bar" style="height:'+barH+'px;background:'+color+';opacity:'+(isToday?1:0.6)+'"></div>'+
+       '<div class="bar-day" style="'+(isToday?'color:var(--primary);font-weight:800':'')+'">'+(isToday?"H.nay":dayLabel)+'</div></div>';
+  });
+  h+='</div></div>';
+  return h;
+}
+
+function rowActions(collection, id, editAct){
+  return '<div class="acts"><button class="ed" data-act="'+editAct+'" data-id="'+id+'" title="Sửa">✏️</button><button class="x" data-act="del" data-c="'+collection+'" data-id="'+id+'" title="Xoá">✕</button></div>';
+}
+
 function vGrowth(){
   var m=METRICS[ui.metric];
   var h='<div class="seg" role="group">'+["w","h","hc"].map(function(k){return '<button data-act="metric" data-k="'+k+'" aria-pressed="'+(ui.metric===k)+'">'+METRICS[k].label+'</button>';}).join("")+'</div>';
@@ -908,82 +1153,142 @@ function vGrowth(){
   if(!all.length)h+='<div class="empty-note"><b>Chưa có số đo nào</b>Bấm Thêm chỉ số để ghi cân nặng, chiều cao, vòng đầu.</div>';
   else{h+='<div class="list">'+all.map(function(g){
     var parts=[];["w","h","hc"].forEach(function(k){if(g[k]!=null)parts.push(METRICS[k].label+" "+fmtNum(g[k],METRICS[k].dec)+" "+METRICS[k].unit);});
-    return '<div class="row"><div class="main"><div class="t">'+fmtDate(g.date)+'</div><div class="s">'+parts.join(" · ")+(g.note?'<br>'+esc(g.note):"")+'</div></div><button class="x" data-act="del" data-c="growth" data-id="'+g.id+'">✕</button></div>';
+    return '<div class="row"><div class="main"><div class="t">'+fmtDate(g.date)+'</div><div class="s">'+parts.join(" · ")+(g.note?'<br>'+esc(g.note):"")+'</div></div>'+rowActions("growth",g.id,"editGrowth")+'</div>';
   }).join("")+'</div>';}
   return h+'</section>';
 }
 
 function vCare(){
-  var h='<div class="seg" role="group">'+
-    '<button data-act="care" data-k="feed" aria-pressed="'+(ui.care==="feed")+'">🍼 Bé bú</button>'+
-    '<button data-act="care" data-k="pump" aria-pressed="'+(ui.care==="pump")+'">🌸 Hút sữa</button>'+
-    '<button data-act="care" data-k="diaper" aria-pressed="'+(ui.care==="diaper")+'">🧷 Thay tã</button>'+
-    '<button data-act="care" data-k="sleep" aria-pressed="'+(ui.care==="sleep")+'">🌙 Giấc ngủ</button>'+
-    '<button data-act="care" data-k="fever" aria-pressed="'+(ui.care==="fever")+'">🌡️ Sốt/Thuốc</button>'+
-  '</div>';
+  // Build segments chỉ cho tính năng được bật
+  var segments = [];
+  if(feat("feeds")) segments.push(["feed","🍼 Bé bú"]);
+  if(feat("pumps")) segments.push(["pump","🌸 Hút sữa"]);
+  if(feat("diapers")) segments.push(["diaper","🧷 Thay tã"]);
+  if(feat("sleeps")) segments.push(["sleep","🌙 Giấc ngủ"]);
+  if(feat("fevers")) segments.push(["fever","🌡️ Sốt/Thuốc"]);
+  if(feat("waters")) segments.push(["water","💧 Nước mẹ"]);
+  
+  if(!segments.length) return '<div class="empty-note"><b>Chưa bật tính năng nào</b>Vào ⚙️ Cài đặt để bật các tính năng cần dùng.</div>';
+  
+  // Nếu care hiện tại không có trong danh sách, chuyển về cái đầu
+  var validCare = segments.some(function(s){return s[0]===ui.care;});
+  if(!validCare) ui.care = segments[0][0];
+
+  var h='<div class="seg" role="group">'+segments.map(function(s){
+    return '<button data-act="care" data-k="'+s[0]+'" aria-pressed="'+(ui.care===s[0])+'">'+s[1]+'</button>';
+  }).join("")+'</div>';
 
   var days={}, arr;
 
   if(ui.care==="feed"){
     arr=sortBy(state.feeds||[],"dt",true).slice(0,150);
-    h+='<section><button class="btn wide" data-act="addFeed">+ Ghi cữ bú của bé 🍼</button></section>';
+    // Chart
+    var feedByDay={};
+    (state.feeds||[]).forEach(function(f){var d=f.dt.slice(0,10);feedByDay[d]=(feedByDay[d]||0)+(f.ml||0);});
+    h+=careBarChart(feedByDay,"var(--butter)","ml");
+    
     arr.forEach(function(f){var d=f.dt.slice(0,10);(days[d]=days[d]||[]).push(f);});
     var keys=Object.keys(days).sort().reverse();
-    if(!keys.length)return h+'<div class="empty-note"><b>Chưa có cữ bú nào</b>Ghi nhận lượng sữa bú mỗi ngày của bé.</div>';
-    keys.forEach(function(d){
-      var tot=days[d].reduce(function(a,f){return a+f.ml;},0);
+    if(!keys.length) h+='<div class="empty-note"><b>Chưa có cữ bú nào</b>Ghi nhận lượng sữa bú mỗi ngày của bé.</div>';
+    else keys.forEach(function(d){
+      var tot=days[d].reduce(function(a,f){return a+(f.ml||0);},0);
       h+='<div class="day"><span>'+fmtDate(d)+(d===isoDate()?" (Hôm nay)":"")+'</span><span style="color:var(--primary)">'+fmtNum(tot,0)+' ml · '+days[d].length+' cữ</span></div><div class="list">'+days[d].map(function(f){
-        return '<div class="row"><div class="main"><div class="t">'+fmtNum(f.ml,0)+' ml</div><div class="s">'+fmtTime(f.dt)+' · '+esc(f.type)+'</div></div><button class="x" data-act="del" data-c="feeds" data-id="'+f.id+'">✕</button></div>';}).join("")+'</div>';
+        var mlText = f.ml ? fmtNum(f.ml,0)+' ml' : '(chưa nhập ml)';
+        var durText = f.duration ? ' · '+f.duration+' phút' : '';
+        return '<div class="row"><div class="main"><div class="t">'+mlText+'</div><div class="s">'+fmtTime(f.dt)+' · '+esc(f.type)+durText+(f.note?' · '+esc(f.note):'')+'</div></div>'+rowActions("feeds",f.id,"editFeed")+'</div>';
+      }).join("")+'</div>';
     });
   }
   else if(ui.care==="pump"){
     arr=sortBy(state.pumps||[],"dt",true).slice(0,150);
-    h+='<section><button class="btn wide" data-act="addPump" style="background:var(--coral)">+ Ghi cữ hút sữa của mẹ 🌸</button></section>';
+    var pumpByDay={};
+    (state.pumps||[]).forEach(function(p){var d=p.dt.slice(0,10);pumpByDay[d]=(pumpByDay[d]||0)+p.total;});
+    h+=careBarChart(pumpByDay,"var(--coral)","ml");
+
     arr.forEach(function(p){var d=p.dt.slice(0,10);(days[d]=days[d]||[]).push(p);});
     var keys=Object.keys(days).sort().reverse();
-    if(!keys.length)return h+'<div class="empty-note"><b>Chưa có cữ hút sữa nào</b>Theo dõi sản lượng sữa hút hàng ngày.</div>';
-    keys.forEach(function(d){
+    if(!keys.length) h+='<div class="empty-note"><b>Chưa có cữ hút sữa nào</b>Theo dõi sản lượng sữa hút hàng ngày.</div>';
+    else keys.forEach(function(d){
       var tot=days[d].reduce(function(a,p){return a+p.total;},0);
       h+='<div class="day"><span>'+fmtDate(d)+(d===isoDate()?" (Hôm nay)":"")+'</span><span style="color:var(--coral)">Tổng '+fmtNum(tot,0)+' ml · '+days[d].length+' cữ</span></div><div class="list">'+days[d].map(function(p){
         var detail = (p.mlL||p.mlR) ? (' (Trái '+p.mlL+'ml | Phải '+p.mlR+'ml)') : '';
-        return '<div class="row"><div class="main"><div class="t">'+fmtNum(p.total,0)+' ml'+detail+'</div><div class="s">'+fmtTime(p.dt)+(p.note?(' · '+esc(p.note)):'')+'</div></div><button class="x" data-act="del" data-c="pumps" data-id="'+p.id+'">✕</button></div>';}).join("")+'</div>';
+        return '<div class="row"><div class="main"><div class="t">'+fmtNum(p.total,0)+' ml'+detail+'</div><div class="s">'+fmtTime(p.dt)+(p.note?(' · '+esc(p.note)):'')+'</div></div>'+rowActions("pumps",p.id,"editPump")+'</div>';
+      }).join("")+'</div>';
     });
   }
   else if(ui.care==="diaper"){
     arr=sortBy(state.diapers||[],"dt",true).slice(0,150);
-    h+='<section><button class="btn wide" data-act="addDiaper" style="background:var(--mint)">+ Ghi nhận thay tã 🧷</button></section>';
+    var diapByDay={};
+    (state.diapers||[]).forEach(function(d){var dt=d.dt.slice(0,10);diapByDay[dt]=(diapByDay[dt]||0)+1;});
+    h+=careBarChart(diapByDay,"var(--mint)","lần");
+
     arr.forEach(function(d){var dt=d.dt.slice(0,10);(days[dt]=days[dt]||[]).push(d);});
     var keys=Object.keys(days).sort().reverse();
-    if(!keys.length)return h+'<div class="empty-note"><b>Chưa ghi nhận thay tã</b>Theo dõi số lần tè và ị giúp mẹ biết bé bú đủ.</div>';
-    keys.forEach(function(d){
+    if(!keys.length) h+='<div class="empty-note"><b>Chưa ghi nhận thay tã</b>Theo dõi số lần tè và ị giúp mẹ biết bé bú đủ.</div>';
+    else keys.forEach(function(d){
       h+='<div class="day"><span>'+fmtDate(d)+(d===isoDate()?" (Hôm nay)":"")+'</span><span style="color:var(--mint)">'+days[d].length+' lần thay tã</span></div><div class="list">'+days[d].map(function(it){
         var badge = it.type==="wet"?"💧 Tã ướt (tè)":(it.type==="dirty"?"💩 Đi ị":"💧💩 Cả tè & ị");
         var extra = it.poo ? (' · '+it.poo) : '';
-        return '<div class="row"><div class="main"><div class="t">'+badge+'</div><div class="s">'+fmtTime(it.dt)+extra+(it.note?(' · '+esc(it.note)):'')+'</div></div><button class="x" data-act="del" data-c="diapers" data-id="'+it.id+'">✕</button></div>';}).join("")+'</div>';
+        return '<div class="row"><div class="main"><div class="t">'+badge+'</div><div class="s">'+fmtTime(it.dt)+extra+(it.note?(' · '+esc(it.note)):'')+'</div></div>'+rowActions("diapers",it.id,"editDiaper")+'</div>';
+      }).join("")+'</div>';
     });
   }
   else if(ui.care==="sleep"){
     arr=sortBy(state.sleeps||[],"start",true).slice(0,150);
-    h+='<section><button class="btn wide" data-act="addSleep" style="background:var(--purple)">+ Ghi giấc ngủ của bé 🌙</button></section>';
+    var sleepByDay={};
+    (state.sleeps||[]).forEach(function(s){var d=s.start.slice(0,10);sleepByDay[d]=(sleepByDay[d]||0)+Math.round(sleepMin(s));});
+    h+=careBarChart(sleepByDay,"var(--purple)","phút");
+
     arr.forEach(function(s){var d=s.start.slice(0,10);(days[d]=days[d]||[]).push(s);});
     var keys=Object.keys(days).sort().reverse();
-    if(!keys.length)return h+'<div class="empty-note"><b>Chưa có giấc ngủ nào</b>Theo dõi tổng giờ ngủ mỗi ngày của bé.</div>';
-    keys.forEach(function(d){
+    if(!keys.length) h+='<div class="empty-note"><b>Chưa có giấc ngủ nào</b>Theo dõi tổng giờ ngủ mỗi ngày của bé.</div>';
+    else keys.forEach(function(d){
       var tot=days[d].reduce(function(a,s){return a+sleepMin(s);},0);
       h+='<div class="day"><span>'+fmtDate(d)+(d===isoDate()?" (Hôm nay)":"")+'</span><span style="color:var(--purple)">'+fmtMin(tot)+' · '+days[d].length+' giấc</span></div><div class="list">'+days[d].map(function(s){
-        return '<div class="row"><div class="main"><div class="t">'+fmtMin(sleepMin(s))+'</div><div class="s">'+fmtTime(s.start)+' đến '+fmtTime(s.end)+(s.start.slice(0,10)!==s.end.slice(0,10)?" ("+fmtShort(s.end)+")":"")+'</div></div><button class="x" data-act="del" data-c="sleeps" data-id="'+s.id+'">✕</button></div>';}).join("")+'</div>';
+        return '<div class="row"><div class="main"><div class="t">'+fmtMin(sleepMin(s))+'</div><div class="s">'+fmtTime(s.start)+' đến '+fmtTime(s.end)+(s.start.slice(0,10)!==s.end.slice(0,10)?" ("+fmtShort(s.end)+")":"")+'</div></div>'+rowActions("sleeps",s.id,"editSleep")+'</div>';
+      }).join("")+'</div>';
     });
   }
   else if(ui.care==="fever"){
     arr=sortBy(state.fevers||[],"dt",true).slice(0,100);
-    h+='<section><button class="btn wide danger" data-act="addFever">+ Cặp nhiệt độ / Ghi thuốc 🌡️</button></section>';
-    if(!arr.length)return h+'<div class="empty-note"><b>Bé trộm vía khỏe mạnh!</b>Bấm nút trên để theo dõi thân nhiệt và liều thuốc khi bé bị sốt.</div>';
-    h+='<div class="list">'+arr.map(function(fe){
+    // Fever chart - temperature line
+    var feverByDay={};
+    (state.fevers||[]).forEach(function(f){var d=f.dt.slice(0,10);if(!feverByDay[d]||f.temp>feverByDay[d])feverByDay[d]=f.temp;});
+    if(Object.keys(feverByDay).length>=1){
+      // Hiển thị nhiệt độ cao nhất mỗi ngày trong 7 ngày gần nhất
+      h+=careBarChart(feverByDay,"var(--danger)","°C");
+    }
+
+    if(!arr.length) h+='<div class="empty-note"><b>Bé trộm vía khỏe mạnh!</b>Bấm nút + để theo dõi thân nhiệt và liều thuốc khi bé bị sốt.</div>';
+    else h+='<div class="list">'+arr.map(function(fe){
       var isHigh = fe.temp >= 38.0;
       return '<div class="row"><div class="main"><div class="t" style="color:'+(isHigh?'var(--danger)':'var(--ink)')+'">'+fe.temp+'°C <span class="chip t-fever">'+esc(fe.pos)+'</span></div>'+
-        '<div class="s">'+fmtDate(fe.dt)+' lúc '+fmtTime(fe.dt)+(fe.med?('<br>💊 Thuốc: <b>'+esc(fe.med)+'</b>'):'')+(fe.note?('<br>Ghi chú: '+esc(fe.note)):'')+'</div></div>'+
-        '<button class="x" data-act="del" data-c="fevers" data-id="'+fe.id+'">✕</button></div>';
+        '<div class="s">'+fmtDate(fe.dt)+' lúc '+fmtTime(fe.dt)+(fe.med?('<br>💊 Thuốc: <b>'+esc(fe.med)+'</b>'):'')+(fe.note?('<br>Ghi chú: '+esc(fe.note)):'')+
+        '</div></div>'+rowActions("fevers",fe.id,"editFever")+'</div>';
     }).join("")+'</div>';
+  }
+  else if(ui.care==="water"){
+    arr=sortBy(state.waters||[],"dt",true).slice(0,150);
+    var waterByDay={};
+    (state.waters||[]).forEach(function(w){var d=w.dt.slice(0,10);waterByDay[d]=(waterByDay[d]||0)+(w.ml||0);});
+    h+=careBarChart(waterByDay,"var(--sky)","ml");
+
+    // Mục tiêu nước uống
+    var todayWater = waterByDay[isoDate()]||0;
+    var target = 2000;
+    var pct = Math.min(100, Math.round(todayWater/target*100));
+    h+='<div class="card" style="margin-bottom:12px;padding:12px 14px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:13px;font-weight:700">💧 Hôm nay: '+fmtNum(todayWater,0)+' / '+target+' ml</span><span style="font-size:12px;font-weight:700;color:var(--sky)">'+pct+'%</span></div>'+
+      '<div style="height:8px;background:var(--bg);border-radius:99px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,var(--sky),var(--primary));border-radius:99px;transition:width 0.3s"></div></div></div>';
+
+    arr.forEach(function(w){var d=w.dt.slice(0,10);(days[d]=days[d]||[]).push(w);});
+    var keys=Object.keys(days).sort().reverse();
+    if(!keys.length) h+='<div class="empty-note"><b>Chưa ghi nhận nước uống</b>Theo dõi lượng nước mẹ uống mỗi ngày.</div>';
+    else keys.forEach(function(d){
+      var tot=days[d].reduce(function(a,w){return a+(w.ml||0);},0);
+      h+='<div class="day"><span>'+fmtDate(d)+(d===isoDate()?" (Hôm nay)":"")+'</span><span style="color:var(--sky)">'+fmtNum(tot,0)+' ml · '+days[d].length+' lần</span></div><div class="list">'+days[d].map(function(w){
+        return '<div class="row"><div class="main"><div class="t">'+fmtNum(w.ml,0)+' ml</div><div class="s">'+fmtTime(w.dt)+' · '+esc(w.type)+(w.note?' · '+esc(w.note):'')+'</div></div>'+rowActions("waters",w.id,"editWater")+'</div>';
+      }).join("")+'</div>';
+    });
   }
 
   return h;
@@ -994,8 +1299,8 @@ function eventRow(e){
   var k=KIND[e.kind]||KIND.khac,left=dayDiff(e.date,isoDate()),when;
   if(e.done)when="Đã xong";else if(left<0)when='<span class="late">Quá hạn '+(-left)+' ngày</span>';else if(left===0)when='<b style="color:var(--primary)">Hôm nay</b>';else when="Còn "+left+" ngày";
   return '<div class="row'+(e.done?" done":"")+'"><button class="check" data-act="toggle" data-id="'+e.id+'" aria-pressed="'+e.done+'" aria-label="Đánh dấu đã xong">✓</button>'+
-    '<div class="main"><div class="t">'+esc(e.title)+'</div><div class="s"><span class="chip '+k[1]+'">'+k[0]+'</span>'+fmtDate(e.date)+(e.time?" "+esc(e.time):"")+' · '+when+'</div></div>'+
-    '<button class="x" data-act="del" data-c="events" data-id="'+e.id+'">✕</button></div>';
+    '<div class="main"><div class="t">'+esc(e.title)+'</div><div class="s"><span class="chip '+k[1]+'">'+k[0]+'</span>'+fmtDate(e.date)+(e.time?" "+esc(e.time):"")+" · "+when+'</div></div>'+
+    rowActions("events",e.id,"editEvent")+'</div>';
 }
 
 function vPlan(){
@@ -1007,26 +1312,38 @@ function vPlan(){
   return h;
 }
 
-function vNotes(){
-  var h='<section><button class="btn wide" data-act="addNote">+ Viết nhật ký mới 📝</button></section>';
-  var arr=sortBy(state.notes||[],"date",true);
-  if(!arr.length)return h+'<div class="empty-note"><b>Chưa có nhật ký</b>Lưu lại những khoảnh khắc đáng nhớ của bé.</div>';
-  return h+'<div class="list">'+arr.map(function(n){
-    return '<div class="row" style="align-items:flex-start"><div class="main"><div class="s" style="font-weight:700;color:var(--primary)">'+fmtDate(n.date)+'</div><div class="t" style="font-weight:600;white-space:pre-wrap;margin-top:3px">'+esc(n.text)+'</div></div><button class="x" data-act="del" data-c="notes" data-id="'+n.id+'">✕</button></div>';
-  }).join("")+'</div>';
-}
-
+// ========== RENDER ==========
 function render(){
   $("#hName").textContent=state.baby.name?(state.baby.name):"Sổ của bé";
   $("#hAge").textContent=ageText()+(state.baby.gender?(" · "+state.baby.gender):"");
-  $("#tabs").innerHTML=TABS.map(function(t){return '<button data-act="tab" data-k="'+t[0]+'"'+(ui.tab===t[0]?' aria-current="page"':"")+'><span aria-hidden="true">'+t[1]+'</span>'+t[2]+'</button>';}).join("");
-  var v={home:vHome,growth:vGrowth,care:vCare,plan:vPlan,notes:vNotes}[ui.tab]();
+  $("#tabs").innerHTML=TABS.map(function(t){return '<button data-act="tab" data-k="'+t[0]+'"'+(ui.tab===t[0]?' aria-current="page"':"")+"><span aria-hidden=\"true\">"+t[1]+"</span>"+t[2]+"</button>";}).join("");
+  var v={home:vHome,growth:vGrowth,care:vCare,plan:vPlan}[ui.tab]();
   $("#view").innerHTML=v;
+  
+  // FAB - chỉ hiển thị ở tab care
+  var fabC = document.getElementById("fab-container");
+  if(ui.tab==="care"){
+    var fabActs = {feed:"addFeed",pump:"addPump",diaper:"addDiaper",sleep:"addSleep",fever:"addFever",water:"addWater"};
+    var fabIcons = {feed:"🍼",pump:"🌸",diaper:"🧷",sleep:"🌙",fever:"🌡️",water:"💧"};
+    var act = fabActs[ui.care]||"addFeed";
+    fabC.innerHTML='<button class="fab" data-act="'+act+'" title="Thêm mới">'+(fabIcons[ui.care]||"+")+'</button>';
+  } else {
+    fabC.innerHTML='';
+  }
 }
 
+// ========== EVENT HANDLING ==========
 document.addEventListener("click",function(e){
   var t=e.target.closest("[data-act]");if(!t)return;
   var a=t.getAttribute("data-act"),k=t.getAttribute("data-k"),id=t.getAttribute("data-id");
+  
+  // Toggle switch handling
+  if(t.classList.contains("toggle-sw")){
+    var cur = t.getAttribute("aria-checked") === "true";
+    t.setAttribute("aria-checked", !cur);
+    return;
+  }
+  
   switch(a){
     case "tab":ui.tab=k;render();window.scrollTo(0,0);break;
     case "metric":ui.metric=k;render();break;
@@ -1038,13 +1355,26 @@ document.addEventListener("click",function(e){
     case "addSleep":fSleep();break;
     case "addFever":fFever();break;
     case "addEvent":fEvent();break;
-    case "addNote":fNote();break;
+    case "addWater":fWater();break;
     case "settings":fSettings();break;
     case "logout":auth.signOut();closeSheet();break;
     case "close":closeSheet();break;
     case "submit":if(sheetSubmit)sheetSubmit();break;
     case "wipe":confirmSheet("Xoá toàn bộ dữ liệu của tài khoản này?",function(){state=blank();save();closeSheet();render();toast("Đã xoá dữ liệu");});break;
     case "toggle":state.events.forEach(function(ev){if(ev.id===id)ev.done=!ev.done;});save();render();break;
+    // Edit actions
+    case "editFeed":fFeed(null,null,id);break;
+    case "editPump":fPump(id);break;
+    case "editSleep":fSleep(id);break;
+    case "editDiaper":fDiaper(id);break;
+    case "editFever":fFever(id);break;
+    case "editGrowth":fGrowth(id);break;
+    case "editEvent":fEvent(id);break;
+    case "editWater":fWater(id);break;
+    // Timer
+    case "timerStart":closeSheet();startTimer();break;
+    case "timerStop":stopTimer(false);break;
+    case "timerCancel":stopTimer(true);break;
     case "del":
       var c=t.getAttribute("data-c");
       confirmSheet("Xoá mục này?",function(){state[c]=(state[c]||[]).filter(function(x){return x.id!==id;});save();closeSheet();render();toast("Đã xoá");});
