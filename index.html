@@ -41,6 +41,10 @@
   --danger:#ef4444;
   --sky:#0ea5e9;
   --sky-soft:#f0f9ff;
+  --teal:#0d9488;
+  --teal-soft:#f0fdfa;
+  --indigo:#6366f1;
+  --indigo-soft:#eef2ff;
   
   --radius-lg:22px;
   --radius-md:16px;
@@ -73,6 +77,8 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, #app::-webkit-scrollbar,
     --butter:#fbbf24;--butter-soft:#2d2410;--mint:#34d399;--mint-soft:#132e27;
     --purple:#a78bfa;--purple-soft:#28203c;--coral:#fb923c;--coral-soft:#332216;
     --danger:#f87171;--sky:#38bdf8;--sky-soft:#0c2d48;
+    --teal:#2dd4bf;--teal-soft:#132e2c;
+    --indigo:#818cf8;--indigo-soft:#232247;
     --bar-bg:rgba(15, 23, 42, 0.88);--bar-border:#334155;
     --shadow:0 6px 18px rgba(0, 0, 0, 0.3);--shadow-sm:0 2px 8px rgba(0, 0, 0, 0.2);
   }
@@ -146,6 +152,8 @@ section{margin-bottom:16px}
 .mini.pump{background:var(--coral-soft);border-color:rgba(249,115,22,0.25)}
 .mini.diaper{background:var(--mint-soft);border-color:rgba(16,185,129,0.25)}
 .mini.water{background:var(--sky-soft);border-color:rgba(14,165,233,0.25)}
+.mini.spray{background:var(--teal-soft);border-color:rgba(13,148,136,0.25)}
+.mini.saline{background:var(--indigo-soft);border-color:rgba(99,102,241,0.25)}
 .mini .k{font-size:12px;color:var(--ink);font-weight:700;opacity:0.85}
 .mini .v{font-size:21px;font-weight:800;margin-top:3px}
 .mini.milk .v{color:var(--butter)}
@@ -153,6 +161,8 @@ section{margin-bottom:16px}
 .mini.pump .v{color:var(--coral)}
 .mini.diaper .v{color:var(--mint)}
 .mini.water .v{color:var(--sky)}
+.mini.spray .v{color:var(--teal)}
+.mini.saline .v{color:var(--indigo)}
 .mini .v small{font-size:12px;font-weight:600;opacity:0.85}
 
 .quick{display:grid;grid-template-columns:repeat(3, 1fr);gap:8px}
@@ -513,7 +523,7 @@ var syncStatus = "online"; // online, offline, error
 function defaultSettings(){
   return {
     feeds:true, pumps:true, diapers:true, sleeps:true, fevers:true,
-    waters:true, growth:true, photos:false,
+    waters:true, sprays:true, salines:true, growth:true, photos:false,
     ageFormat:"month_day"
   };
 }
@@ -523,7 +533,7 @@ function blank(){
     baby:{name:"",dob:"",gender:""},
     settings: defaultSettings(),
     growth:[], feeds:[], pumps:[], sleeps:[], diapers:[],
-    fevers:[], events:[], waters:[]
+    fevers:[], events:[], waters:[], sprays:[], salines:[]
   };
 }
 
@@ -637,7 +647,11 @@ auth.onAuthStateChanged(function(user){
       if(local){
         state = Object.assign(blank(), JSON.parse(local));
         if(!state.settings) state.settings = defaultSettings();
+        if(state.settings.sprays === undefined) state.settings.sprays = true;
+        if(state.settings.salines === undefined) state.settings.salines = true;
         if(!state.waters) state.waters = [];
+        if(!state.sprays) state.sprays = [];
+        if(!state.salines) state.salines = [];
       }
     } catch(e){}
     render();
@@ -656,7 +670,11 @@ auth.onAuthStateChanged(function(user){
         if(!localPending || serverTs >= localPending){
           state = Object.assign(blank(), serverData);
           if(!state.settings) state.settings = defaultSettings();
+          if(state.settings.sprays === undefined) state.settings.sprays = true;
+          if(state.settings.salines === undefined) state.settings.salines = true;
           if(!state.waters) state.waters = [];
+          if(!state.sprays) state.sprays = [];
+          if(!state.salines) state.salines = [];
           try { localStorage.setItem("baby_cache_" + user.uid, JSON.stringify(state)); } catch(e){}
         }
         render();
@@ -755,6 +773,7 @@ function sortBy(arr,key,desc){return (arr||[]).slice().sort(function(a,b){return
 // Check if feature is enabled
 function feat(key){
   if(!state.settings) state.settings = defaultSettings();
+  if(state.settings[key] === undefined) return true;
   return state.settings[key] !== false;
 }
 
@@ -1091,6 +1110,99 @@ function fWater(editId){
   });
 }
 
+function fSpray(editId){
+  var existing = editId ? (state.sprays||[]).find(function(s){return s.id===editId;}) : null;
+  var title = existing ? "Sửa xịt ưu trương" : "Ghi xịt ưu trương";
+  var sideVal = existing ? existing.side : "Cả 2 bên mũi";
+  var doseVal = existing ? existing.doses : "1 nhát / bên";
+  var brandVal = existing ? existing.brand : "Nebianax 3%";
+
+  openSheet(title,
+   '<div class="f"><label for="sp_dt">Thời điểm</label><input id="sp_dt" name="dt" type="datetime-local" value="'+(existing?existing.dt:isoDT())+'"></div>'+
+   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'+
+     '<div class="f"><label for="sp_side">Vị trí xịt</label><select id="sp_side" name="side">'+
+       '<option'+(sideVal==="Cả 2 bên mũi"?" selected":"")+'>Cả 2 bên mũi</option>'+
+       '<option'+(sideVal==="Mũi trái"?" selected":"")+'>Mũi trái</option>'+
+       '<option'+(sideVal==="Mũi phải"?" selected":"")+'>Mũi phải</option>'+
+     '</select></div>'+
+     '<div class="f"><label for="sp_dose">Liều lượng</label><select id="sp_dose" name="doses">'+
+       '<option'+(doseVal==="1 nhát / bên"?" selected":"")+'>1 nhát / bên</option>'+
+       '<option'+(doseVal==="2 nhát / bên"?" selected":"")+'>2 nhát / bên</option>'+
+       '<option'+(doseVal==="1 nhát"?" selected":"")+'>1 nhát</option>'+
+       '<option'+(doseVal==="2 nhát"?" selected":"")+'>2 nhát</option>'+
+       '<option'+(doseVal==="3 nhát"?" selected":"")+'>3 nhát</option>'+
+       '<option'+(doseVal==="Khác"?" selected":"")+'>Khác</option>'+
+     '</select></div>'+
+   '</div>'+
+   '<div class="f"><label for="sp_brand">Loại ưu trương / Sản phẩm</label><select id="sp_brand" name="brand">'+
+     '<option'+(brandVal==="Nebianax 3%"?" selected":"")+'>Nebianax 3% (Buona)</option>'+
+     '<option'+(brandVal==="Fysoline vàng"?" selected":"")+'>Fysoline vàng (Kháng viêm/Ưu trương)</option>'+
+     '<option'+(brandVal==="Marimer Baby ưu trương"?" selected":"")+'>Marimer Baby ưu trương</option>'+
+     '<option'+(brandVal==="Sterimar Baby ưu trương"?" selected":"")+'>Sterimar Baby ưu trương</option>'+
+     '<option'+(brandVal==="Nước muối ưu trương 3%"?" selected":"")+'>Nước muối ưu trương 3%</option>'+
+     '<option'+(brandVal==="Khác"?" selected":"")+'>Khác</option>'+
+   '</select></div>'+
+   '<div class="f"><label for="sp_n">Ghi chú</label><input id="sp_n" name="note" placeholder="vd: Sau hút mũi, bé thở êm hơn..." value="'+(existing?esc(existing.note||""):"")+'"></div>',
+   "Lưu xịt ưu trương",function(){
+    var v=vals();
+    if(!v.dt)return sErr("Vui lòng chọn thời điểm.");
+    if(existing){
+      existing.dt=v.dt;existing.side=v.side;existing.doses=v.doses;existing.brand=v.brand;existing.note=v.note.trim();
+    } else {
+      state.sprays = state.sprays || [];
+      state.sprays.push({id:uid(), dt:v.dt, side:v.side, doses:v.doses, brand:v.brand, note:v.note.trim()});
+    }
+    save();closeSheet();render();toast(existing?"Đã cập nhật":"Đã lưu xịt ưu trương");
+  });
+}
+
+function fSaline(editId){
+  var existing = editId ? (state.salines||[]).find(function(s){return s.id===editId;}) : null;
+  var title = existing ? "Sửa nhỏ nước muối" : "Ghi nhỏ nước muối";
+  var targetVal = existing ? existing.target : "2 bên mũi";
+  var dropVal = existing ? existing.drops : "1-2 giọt";
+  var brandVal = existing ? existing.brand : "Nước muối sinh lý 0.9%";
+
+  openSheet(title,
+   '<div class="f"><label for="sl_dt">Thời điểm</label><input id="sl_dt" name="dt" type="datetime-local" value="'+(existing?existing.dt:isoDT())+'"></div>'+
+   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'+
+     '<div class="f"><label for="sl_target">Vị trí nhỏ</label><select id="sl_target" name="target">'+
+       '<option'+(targetVal==="2 bên mũi"?" selected":"")+'>2 bên mũi</option>'+
+       '<option'+(targetVal==="2 bên mắt"?" selected":"")+'>2 bên mắt</option>'+
+       '<option'+(targetVal==="Cả mắt & mũi"?" selected":"")+'>Cả mắt & mũi</option>'+
+       '<option'+(targetVal==="Tai"?" selected":"")+'>Tai</option>'+
+       '<option'+(targetVal==="Khác"?" selected":"")+'>Khác</option>'+
+     '</select></div>'+
+     '<div class="f"><label for="sl_drops">Liều lượng</label><select id="sl_drops" name="drops">'+
+       '<option'+(dropVal==="1-2 giọt"?" selected":"")+'>1-2 giọt</option>'+
+       '<option'+(dropVal==="3-5 giọt"?" selected":"")+'>3-5 giọt</option>'+
+       '<option'+(dropVal==="Nửa ống tép"?" selected":"")+'>Nửa ống tép</option>'+
+       '<option'+(dropVal==="1 ống tép"?" selected":"")+'>1 ống tép</option>'+
+       '<option'+(dropVal==="Rửa sạch mũi"?" selected":"")+'>Rửa sạch mũi</option>'+
+       '<option'+(dropVal==="Khác"?" selected":"")+'>Khác</option>'+
+     '</select></div>'+
+   '</div>'+
+   '<div class="f"><label for="sl_brand">Loại nước muối</label><select id="sl_brand" name="brand">'+
+     '<option'+(brandVal==="Nước muối sinh lý 0.9%"?" selected":"")+'>Nước muối sinh lý 0.9%</option>'+
+     '<option'+(brandVal==="Fysoline hồng (vệ sinh)"?" selected":"")+'>Fysoline hồng (vệ sinh)</option>'+
+     '<option'+(brandVal==="Physiodose (Pháp)"?" selected":"")+'>Physiodose (Pháp)</option>'+
+     '<option'+(brandVal==="Natri Clorid 0.9%"?" selected":"")+'>Natri Clorid 0.9%</option>'+
+     '<option'+(brandVal==="Khác"?" selected":"")+'>Khác</option>'+
+   '</select></div>'+
+   '<div class="f"><label for="sl_n">Ghi chú</label><input id="sl_n" name="note" placeholder="vd: Vệ sinh sau khi ngủ dậy, sau tắm..." value="'+(existing?esc(existing.note||""):"")+'"></div>',
+   "Lưu nhỏ nước muối",function(){
+    var v=vals();
+    if(!v.dt)return sErr("Vui lòng chọn thời điểm.");
+    if(existing){
+      existing.dt=v.dt;existing.target=v.target;existing.drops=v.drops;existing.brand=v.brand;existing.note=v.note.trim();
+    } else {
+      state.salines = state.salines || [];
+      state.salines.push({id:uid(), dt:v.dt, target:v.target, drops:v.drops, brand:v.brand, note:v.note.trim()});
+    }
+    save();closeSheet();render();toast(existing?"Đã cập nhật":"Đã lưu nhỏ nước muối");
+  });
+}
+
 function fEvent(editId){
   var existing = editId ? (state.events||[]).find(function(e){return e.id===editId;}) : null;
   var title = existing ? "Sửa lịch hẹn" : "Thêm lịch hẹn";
@@ -1153,6 +1265,8 @@ function fSettings(){
      togRow("sleeps","🌙","Giấc ngủ")+
      togRow("fevers","🌡️","Cặp nhiệt / Thuốc")+
      togRow("waters","💧","Nước mẹ uống")+
+     togRow("sprays","👃","Xịt ưu trương")+
+     togRow("salines","🧂","Nhỏ nước muối")+
      togRow("growth","📏","Chỉ số phát triển")+
      togRow("photos","📷","Ảnh đính kèm")+
    '</div>'+
@@ -1207,6 +1321,8 @@ function vHome(){
   var sleepMinTot=feat("sleeps")?(state.sleeps||[]).filter(function(s){return s.end.slice(0,10)===today;}).reduce(function(a,s){return a+sleepMin(s);},0):0;
   var diaperCount=feat("diapers")?(state.diapers||[]).filter(function(d){return d.dt.slice(0,10)===today;}).length:0;
   var waterMl=feat("waters")?(state.waters||[]).filter(function(w){return w.dt.slice(0,10)===today;}).reduce(function(a,w){return a+(w.ml||0);},0):0;
+  var sprayCount=feat("sprays")?(state.sprays||[]).filter(function(s){return s.dt.slice(0,10)===today;}).length:0;
+  var salineCount=feat("salines")?(state.salines||[]).filter(function(s){return s.dt.slice(0,10)===today;}).length:0;
 
   var statsHtml = '';
   if(feat("feeds")) statsHtml+='<div class="mini milk"><div class="k">🍼 Bé bú</div><div class="v">'+fmtNum(feedMl,0)+' <small>ml</small></div></div>';
@@ -1214,6 +1330,8 @@ function vHome(){
   if(feat("sleeps")) statsHtml+='<div class="mini sleep"><div class="k">🌙 Bé ngủ</div><div class="v">'+(sleepMinTot?fmtMin(sleepMinTot):"0p")+'</div></div>';
   if(feat("diapers")) statsHtml+='<div class="mini diaper"><div class="k">🧷 Thay tã</div><div class="v">'+diaperCount+' <small>lần</small></div></div>';
   if(feat("waters")) statsHtml+='<div class="mini water"><div class="k">💧 Nước mẹ</div><div class="v">'+fmtNum(waterMl,0)+' <small>ml</small></div></div>';
+  if(feat("sprays")) statsHtml+='<div class="mini spray"><div class="k">👃 Xịt ưu trương</div><div class="v">'+sprayCount+' <small>lần</small></div></div>';
+  if(feat("salines")) statsHtml+='<div class="mini saline"><div class="k">🧂 Nhỏ nước muối</div><div class="v">'+salineCount+' <small>lần</small></div></div>';
   
   if(statsHtml) h+='<section><div class="sec-title"><span>📊</span> Hôm nay</div><div class="grid-stats">'+statsHtml+'</div></section>';
 
@@ -1229,6 +1347,8 @@ function vHome(){
   if(feat("diapers")) qActions+='<button class="btn ghost" data-act="addDiaper">🧷 Thay tã</button>';
   if(feat("sleeps")) qActions+='<button class="btn ghost" data-act="addSleep">🌙 Bé ngủ</button>';
   if(feat("fevers")) qActions+='<button class="btn ghost" data-act="addFever">🌡️ Cặp nhiệt</button>';
+  if(feat("sprays")) qActions+='<button class="btn ghost" data-act="addSpray">👃 Xịt ưu trương</button>';
+  if(feat("salines")) qActions+='<button class="btn ghost" data-act="addSaline">🧂 Nhỏ muối</button>';
   if(feat("growth")) qActions+='<button class="btn ghost" data-act="addGrowth">📏 Chỉ số</button>';
   if(feat("waters")) qActions+='<button class="btn ghost" data-act="addWater">💧 Nước mẹ</button>';
 
@@ -1629,6 +1749,8 @@ function vCare(){
   if(feat("diapers")) segments.push(["diaper","🧷 Thay tã"]);
   if(feat("sleeps")) segments.push(["sleep","🌙 Giấc ngủ"]);
   if(feat("fevers")) segments.push(["fever","🌡️ Sốt/Thuốc"]);
+  if(feat("sprays")) segments.push(["spray","👃 Xịt ưu trương"]);
+  if(feat("salines")) segments.push(["saline","🧂 Nhỏ muối"]);
   if(feat("waters")) segments.push(["water","💧 Nước mẹ"]);
   
   if(!segments.length) return '<div class="empty-note"><b>Chưa bật tính năng nào</b>Vào ⚙️ Cài đặt để bật các tính năng cần dùng.</div>';
@@ -1741,6 +1863,38 @@ function vCare(){
       }).join("")+'</div>';
     });
   }
+  else if(ui.care==="spray"){
+    arr=sortBy(state.sprays||[],"dt",true).slice(0,150);
+    h+=careBarChart(state.sprays||[], function(s){return s.dt;}, function(s){return 1;}, "var(--teal)", "lần", "Xịt ưu trương", "sum", ui.careChartKey, ui.carePeriod);
+
+    arr.forEach(function(s){var d=s.dt.slice(0,10);(days[d]=days[d]||[]).push(s);});
+    var keys=Object.keys(days).sort().reverse();
+    if(!keys.length) h+='<div class="empty-note"><b>Chưa có lần xịt ưu trương nào</b>Ghi nhận các lần xịt ưu trương giúp giảm nghẹt mũi, thông thoáng đường thở cho bé.</div>';
+    else keys.forEach(function(d){
+      h+='<div class="day"><span>'+fmtDate(d)+(d===isoDate()?" (Hôm nay)":"")+'</span><span style="color:var(--teal)">'+days[d].length+' lần xịt</span></div><div class="list">'+days[d].map(function(s){
+        var dose = s.doses ? (' ('+esc(s.doses)+')') : '';
+        var side = s.side ? (' · '+esc(s.side)) : '';
+        var brand = s.brand ? (' · '+esc(s.brand)) : '';
+        return '<div class="row"><div class="main"><div class="t">👃 Xịt ưu trương'+dose+'</div><div class="s">'+fmtTime(s.dt)+side+brand+(s.note?(' · '+esc(s.note)):'')+'</div></div>'+rowActions("sprays",s.id,"editSpray")+'</div>';
+      }).join("")+'</div>';
+    });
+  }
+  else if(ui.care==="saline"){
+    arr=sortBy(state.salines||[],"dt",true).slice(0,150);
+    h+=careBarChart(state.salines||[], function(s){return s.dt;}, function(s){return 1;}, "var(--indigo)", "lần", "Nhỏ nước muối", "sum", ui.careChartKey, ui.carePeriod);
+
+    arr.forEach(function(s){var d=s.dt.slice(0,10);(days[d]=days[d]||[]).push(s);});
+    var keys=Object.keys(days).sort().reverse();
+    if(!keys.length) h+='<div class="empty-note"><b>Chưa có lần nhỏ nước muối nào</b>Theo dõi việc nhỏ nước muối vệ sinh mắt, mũi hàng ngày cho bé.</div>';
+    else keys.forEach(function(d){
+      h+='<div class="day"><span>'+fmtDate(d)+(d===isoDate()?" (Hôm nay)":"")+'</span><span style="color:var(--indigo)">'+days[d].length+' lần nhỏ</span></div><div class="list">'+days[d].map(function(s){
+        var drops = s.drops ? (' ('+esc(s.drops)+')') : '';
+        var target = s.target ? (' · '+esc(s.target)) : '';
+        var brand = s.brand ? (' · '+esc(s.brand)) : '';
+        return '<div class="row"><div class="main"><div class="t">🧂 Nhỏ nước muối'+drops+'</div><div class="s">'+fmtTime(s.dt)+target+brand+(s.note?(' · '+esc(s.note)):'')+'</div></div>'+rowActions("salines",s.id,"editSaline")+'</div>';
+      }).join("")+'</div>';
+    });
+  }
 
   return h;
 }
@@ -1782,10 +1936,10 @@ function render(){
 
   // FAB - chỉ hiển thị ở tab care khi có tính năng chăm sóc được bật
   var fabC = document.getElementById("fab-container");
-  var hasCare = feat("feeds")||feat("pumps")||feat("diapers")||feat("sleeps")||feat("fevers")||feat("waters");
+  var hasCare = feat("feeds")||feat("pumps")||feat("diapers")||feat("sleeps")||feat("fevers")||feat("waters")||feat("sprays")||feat("salines");
   if(ui.tab==="care" && hasCare){
-    var fabActs = {feed:"addFeed",pump:"addPump",diaper:"addDiaper",sleep:"addSleep",fever:"addFever",water:"addWater"};
-    var fabIcons = {feed:"🍼",pump:"🌸",diaper:"🧷",sleep:"🌙",fever:"🌡️",water:"💧"};
+    var fabActs = {feed:"addFeed",pump:"addPump",diaper:"addDiaper",sleep:"addSleep",fever:"addFever",water:"addWater",spray:"addSpray",saline:"addSaline"};
+    var fabIcons = {feed:"🍼",pump:"🌸",diaper:"🧷",sleep:"🌙",fever:"🌡️",water:"💧",spray:"👃",saline:"🧂"};
     var act = fabActs[ui.care]||"addFeed";
     fabC.innerHTML='<button class="fab" data-act="'+act+'" title="Thêm mới">'+(fabIcons[ui.care]||"+")+'</button>';
   } else {
@@ -1834,6 +1988,8 @@ document.addEventListener("click",function(e){
     case "addFever":fFever();break;
     case "addEvent":fEvent();break;
     case "addWater":fWater();break;
+    case "addSpray":fSpray();break;
+    case "addSaline":fSaline();break;
     case "settings":fSettings();break;
     case "toggleAgeFormat":
       if(!state.baby.dob){ fSettings(); break; }
@@ -1866,6 +2022,8 @@ document.addEventListener("click",function(e){
     case "editGrowth":fGrowth(id);break;
     case "editEvent":fEvent(id);break;
     case "editWater":fWater(id);break;
+    case "editSpray":fSpray(id);break;
+    case "editSaline":fSaline(id);break;
     // Timer
     case "timerStart":closeSheet();startTimer();break;
     case "timerStop":stopTimer(false);break;
